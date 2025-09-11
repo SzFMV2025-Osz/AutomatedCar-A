@@ -1,0 +1,36 @@
+name: .NET Ubuntu
+
+on:
+  push:
+    branches: 
+        - master
+        - develop
+  pull_request:
+    branches: 
+        - master
+        - develop
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+    - name: Clean
+      run: dotnet clean && dotnet nuget locals all --clear
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal --collect:"XPlat Code Coverage"
+    - name: Upload coverage reports to Codecov
+      if: success()
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
