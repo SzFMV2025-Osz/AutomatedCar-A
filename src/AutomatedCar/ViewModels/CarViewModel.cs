@@ -13,6 +13,7 @@
         public CarViewModel(AutomatedCar car) : base(car)
         {
             this.Car = car;
+            // important feature
         }
     }
 }
