@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using Avalonia.Input;
 
-    public class GearShift : IGearShifter
+    public class GearShift : SystemComponent, IGearShifter
     {
         public Gear CurrentGear { get; set; } = Gear.P;
 
@@ -45,12 +45,20 @@
 
         private static double Lerp(double a, double b, double t) => a + ((b - a) * Math.Clamp(t, 0.0, 1.0));
 
-        public void Process()
+        public GearShift(VirtualFunctionBus bus)
+        : base(bus)
         {
-            double throttle = 0.5; 
-            double deltaTime = 1.0 / 60.0; 
+
+        }
+
+        public override void Process()
+        {
+            double throttle = 0.5;
+            double deltaTime = 1.0 / 60.0;
 
             this.Update(throttle, deltaTime);
+
+            this.virtualFunctionBus.GearShifter = this;
         }
 
         public void Shift(Key key)
