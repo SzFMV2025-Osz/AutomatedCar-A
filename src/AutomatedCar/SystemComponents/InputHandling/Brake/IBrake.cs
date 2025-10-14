@@ -1,4 +1,4 @@
-﻿namespace AutomatedCar.SystemComponents.InputHandling
+﻿namespace AutomatedCar.SystemComponents.InputHandling.Brake
 {
     using System;
     using System.Collections.Generic;

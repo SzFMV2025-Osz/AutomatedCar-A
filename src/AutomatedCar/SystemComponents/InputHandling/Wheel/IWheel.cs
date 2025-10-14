@@ -1,4 +1,4 @@
-﻿namespace AutomatedCar.SystemComponents.InputHandling
+﻿namespace AutomatedCar.SystemComponents.InputHandling.Wheel
 {
     using System;
     using System.Collections.Generic;
@@ -8,6 +8,6 @@
 
     public interface IWheel
     {
-        public double AngleAsDeagree {  get; set; }
+        public double AngleAsDegree {  get; set; }
     }
 }

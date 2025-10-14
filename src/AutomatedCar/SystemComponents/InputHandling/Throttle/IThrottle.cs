@@ -1,4 +1,4 @@
-﻿namespace AutomatedCar.SystemComponents.InputHandling
+﻿namespace AutomatedCar.SystemComponents.InputHandling.Throttle
 {
     using System;
     using System.Collections.Generic;
