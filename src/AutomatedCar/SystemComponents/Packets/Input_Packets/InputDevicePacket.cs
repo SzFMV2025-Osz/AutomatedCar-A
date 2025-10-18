@@ -16,7 +16,6 @@
 
         protected double? wheelPercentage;
 
-        protected GearShift shiftUpOrDown;
 
         public virtual int? BrakePercentage
         {
@@ -36,10 +35,5 @@
             set => this.RaiseAndSetIfChanged(ref wheelPercentage, value);
         }
 
-        public GearShift ShiftUpOrDown
-        {
-            get => shiftUpOrDown;
-            set => this.RaiseAndSetIfChanged(ref shiftUpOrDown, value);
-        }
     }
 }

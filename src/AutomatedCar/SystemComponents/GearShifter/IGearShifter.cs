@@ -3,14 +3,6 @@
     using System;
     using Avalonia.Input;
 
-    public enum Gear
-    {
-        P = 0,
-        R = 1,
-        N = 2,
-        D = 3,
-    }
-
     public interface IGearShifter
     {
         public Gear CurrentGear { get; set; }

@@ -15,6 +15,5 @@
 
         public double? WheelPercentage { get; }
 
-        public GearShift? ShiftUpOrDown { get; }
     }
 }
