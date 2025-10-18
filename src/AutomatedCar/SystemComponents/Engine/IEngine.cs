@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public interface IEngine
+    public interface IEngine 
     {
         public int Revolution { get; set; }
 
