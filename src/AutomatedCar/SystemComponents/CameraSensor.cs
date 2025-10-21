@@ -29,7 +29,7 @@ public class CameraSensor : SystemComponent
     /// Initializes a new instance of the <see cref="CameraSensor"/> class.
     /// </summary>
     /// <param name="virtualFunctionBus">Need a virtual bus.</param>
-    /// <param name="vision">Need an ITriangle.</param>
+    /// <param name="vision">An <c>ITriangle</c> representing the sensor's vision.</param>
     public CameraSensor(VirtualFunctionBus virtualFunctionBus, ITriangle vision)
         : base(virtualFunctionBus)
     {
