@@ -50,7 +50,10 @@ public class CameraSensor : SystemComponent
 
     private WorldObject GetHighlightedObject()
     {
-        var car = World.Instance.WorldObjects.OfType<AutomatedCar>().First();
-        return this.cameraPacket.RelevantObjects.OrderBy(x => Math.Sqrt(Math.Pow(Math.Abs(car.X - x.X), 2) + Math.Pow(Math.Abs(car.Y - x.Y), 2))).FirstOrDefault();
+        var car = World.Instance.ControlledCar;
+        return this.cameraPacket.RelevantObjects
+            .OrderBy(x =>
+                Point.Distance(new Point(x.X, x.Y), new Point(car.X, car.Y)))
+            .FirstOrDefault();
     }
 }
