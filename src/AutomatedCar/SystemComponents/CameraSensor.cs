@@ -13,7 +13,7 @@ public class CameraSensor : SystemComponent
     /// <summary>
     /// Items that the camera cant see
     /// </summary>
-    private static readonly WorldObjectType[] CantSee =
+    private static readonly WorldObjectType[] CanSee =
     {
         WorldObjectType.Crosswalk,
         WorldObjectType.ParkingSpace,
@@ -43,7 +43,7 @@ public class CameraSensor : SystemComponent
     /// </summary>
     public override void Process()
     {
-        this.cameraPacket.SetRelevantObjects(this.vision.IntersectsWith().Where(x => !CantSee.Contains(x.WorldObjectType)).ToList());
+        this.cameraPacket.SetRelevantObjects(this.vision.IntersectsWith().Where(x => CanSee.Contains(x.WorldObjectType)).ToList());
         this.cameraPacket.SetHighlightedObject(this.GetHighlightedObject());
         this.virtualFunctionBus.CameraPacket = this.cameraPacket;
     }
