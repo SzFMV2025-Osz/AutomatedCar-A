@@ -9,6 +9,10 @@ namespace AutomatedCar.SystemComponents
 
         public IReadOnlyDummyPacket DummyPacket { get; set; }
 
+        public IReadOnlyRadarPacket RadarPacket { get; set; }
+
+        public IReadOnlyRadarPacket CameraPacket { get; set; }
+
         public void RegisterComponent(SystemComponent component)
         {
             this.components.Add(component);
