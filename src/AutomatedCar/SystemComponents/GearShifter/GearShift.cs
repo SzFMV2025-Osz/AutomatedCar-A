@@ -58,7 +58,7 @@
 
             this.Update(throttle, deltaTime);
 
-            this.virtualFunctionBus.GearShifter = this;
+            //this.virtualFunctionBus.GearShifter = this; Ideiglenesen kikerült a vfb-ból mert jelenleg másik osztállyal tesztelek
         }
 
         public void Shift(Key key)

@@ -23,5 +23,12 @@
                 }
             }
         }
+
+        public static double ToDegrees(int angleInt)
+        {
+            // +60 deg -> -60 deg
+            return angleInt * 0.6;
+        }
+
     }
 }

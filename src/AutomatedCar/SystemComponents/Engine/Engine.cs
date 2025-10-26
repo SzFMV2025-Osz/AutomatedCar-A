@@ -30,7 +30,7 @@
 
         public void CalculateRPM()
         {
-            Revolution = gearBox.CalculateGearSpeed(Revolution, throttle.GetThrottle() * 60);
+            Revolution = gearBox.CalculateGearSpeed(Revolution, throttle.GetThrottle() * 70);
         }
     }
 }

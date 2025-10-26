@@ -43,7 +43,4 @@
   <ItemGroup>
     <RuntimeHostConfigurationOption Include="System.Drawing.EnableUnixSupport" Value="true" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SystemComponents\Powertrain\" />
-  </ItemGroup>
 </Project>

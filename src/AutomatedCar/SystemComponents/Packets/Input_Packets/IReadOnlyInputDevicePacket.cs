@@ -16,7 +16,7 @@
 
         public double? WheelPercentage { get; }
 
-        public ShiftDir shiftUpOrDown { get; }
+        public ShiftDir? ShiftUpOrDown { get; }
 
     }
 }
