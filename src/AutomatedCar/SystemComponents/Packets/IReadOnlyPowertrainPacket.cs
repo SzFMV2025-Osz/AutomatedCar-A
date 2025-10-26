@@ -14,9 +14,9 @@
 
         public double Rotation { get; }
 
-        public int RPM {  get; }
+        public int RPM { get; }
 
-        public int Speed {  get; }
+        public int Speed { get; }
 
         public Gear GearStage { get; }
     }

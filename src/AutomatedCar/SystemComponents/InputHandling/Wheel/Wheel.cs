@@ -9,12 +9,14 @@
     public class Wheel : IWheel
     {
         private double angleAsDegree;
+
         public double AngleAsDegree
         {
             get
             {
                 return this.angleAsDegree;
             }
+
             set
             {
                 if (value >= -60 && value <= 60)

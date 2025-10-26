@@ -6,6 +6,9 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// This is the helper for shift between P-R-N_D.
+    /// </summary>
     public enum ShiftDir
     {
         Down = -1,

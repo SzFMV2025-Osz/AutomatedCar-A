@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public interface IReadOnlyKeyboardHandlerPacket :IReadOnlyInputDevicePacket
+    public interface IReadOnlyKeyboardHandlerPacket : IReadOnlyInputDevicePacket
     {
     }
 }

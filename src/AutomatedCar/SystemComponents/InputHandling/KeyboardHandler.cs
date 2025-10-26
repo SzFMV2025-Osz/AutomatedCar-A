@@ -33,7 +33,6 @@
             this.brakeSmoothReturnIsActive = false;
             this.throttleSmoothReturnIsActive = false;
 
-
             this.shiftingDirection = ShiftDir.Nothing;
 
             this.shiftingDirection = ShiftDir.Nothing;
