@@ -110,8 +110,27 @@ namespace AutomatedCar.Views
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            Keyboard.Keys.Remove(e.Key);
+            MainWindowViewModel viewModel = (MainWindowViewModel)this.DataContext;
+            if (e.Key == Key.Up)
+            {
+                viewModel.KeyboardHandler.HandleKeyUp_Up();
+            }
+            else if (e.Key == Key.Down)
+            {
+                viewModel.KeyboardHandler.HandleKeyUp_Down();
+            }
+            else if (e.Key == Key.Left)
+            {
+                viewModel.KeyboardHandler.HandleKeyUp_Left();
+            }
+            else if (e.Key == Key.Right)
+            {
+                viewModel.KeyboardHandler.HandleKeyUp_Right();
+            }
+
             base.OnKeyUp(e);
+
+            Keyboard.Keys.Remove(e.Key);
         }
 
         private void InitializeComponent()
