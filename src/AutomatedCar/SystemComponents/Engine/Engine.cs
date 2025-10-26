@@ -1,5 +1,6 @@
-﻿namespace AutomatedCar.SystemComponents.Engine
+﻿namespace AutomatedCar.SystemComponents.Enginee
 {
+    using AutomatedCar.SystemComponents.Gearbox;
     using AutomatedCar.SystemComponents.GearShifter;
     using AutomatedCar.SystemComponents.InputHandling.Throttle;
     using System;
@@ -11,7 +12,7 @@
     public class Engine :IEngine
     {
         private int revolution;
-        private IGearShifter gearBox;
+        private IGearBox gearBox;
         private IThrottle throttle;
 
         public int Revolution
@@ -20,7 +21,7 @@
             set => revolution = value;
         }
 
-        public Engine(IGearShifter gearShifter, IThrottle throttle)
+        public Engine(IGearBox gearShifter, IThrottle throttle)
         {
             this.revolution = 1000;
             this.gearBox = gearShifter;
@@ -29,7 +30,7 @@
 
         public void CalculateRPM()
         {
-            //To be continued
+            Revolution = gearBox.CalculateGearSpeed(Revolution, throttle.GetThrottle() * 60);
         }
     }
 }

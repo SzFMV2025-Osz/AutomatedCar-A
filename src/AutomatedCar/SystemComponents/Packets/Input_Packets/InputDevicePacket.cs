@@ -1,5 +1,6 @@
 ﻿namespace AutomatedCar.SystemComponents.Packets.Input_Packets
 {
+    using AutomatedCar.SystemComponents.GearBox_test;
     using AutomatedCar.SystemComponents.GearShifter;
     using ReactiveUI;
     using System;
@@ -15,6 +16,8 @@
         protected int? throttlePercentage;
 
         protected double? wheelPercentage;
+
+        protected ShiftDir? shiftUpOrDown;
 
 
         public virtual int? BrakePercentage
@@ -33,6 +36,12 @@
         {
             get => wheelPercentage;
             set => this.RaiseAndSetIfChanged(ref wheelPercentage, value);
+        }
+
+        public virtual ShiftDir? ShiftUpOrDown
+        {
+            get => shiftUpOrDown;
+            set => this.RaiseAndSetIfChanged(ref shiftUpOrDown, value);
         }
 
     }

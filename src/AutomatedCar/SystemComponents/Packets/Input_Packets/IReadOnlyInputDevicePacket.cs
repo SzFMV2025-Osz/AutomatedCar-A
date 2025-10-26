@@ -1,5 +1,6 @@
 ﻿namespace AutomatedCar.SystemComponents.Packets.Input_Packets
 {
+    using AutomatedCar.SystemComponents.GearBox_test;
     using AutomatedCar.SystemComponents.GearShifter;
     using System;
     using System.Collections.Generic;
@@ -14,6 +15,8 @@
         public int? ThrottlePercentage { get; }
 
         public double? WheelPercentage { get; }
+
+        public ShiftDir shiftUpOrDown { get; }
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace AutomatedCar.SystemComponents.Packets
 {
+    using AutomatedCar.SystemComponents.GearBox_test;
     using AutomatedCar.SystemComponents.GearShifter;
     using AutomatedCar.SystemComponents.Packets.Input_Packets;
     using ReactiveUI;
@@ -17,6 +18,7 @@
             this.throttlePercentage = 0;
             this.brakePercentage = 0;
             this.wheelPercentage = 0;
+            this.shiftUpOrDown = 0;
         }
 
         public override int? BrakePercentage
@@ -46,6 +48,16 @@
             {
                 if (value != null)
                     this.RaiseAndSetIfChanged(ref this.wheelPercentage, value);
+            }
+        }
+
+        public override ShiftDir? ShiftUpOrDown
+        {
+            get => this.shiftUpOrDown;
+            set
+            {
+                if (value != null)
+                    this.RaiseAndSetIfChanged(ref this.shiftUpOrDown, value);
             }
         }
 
