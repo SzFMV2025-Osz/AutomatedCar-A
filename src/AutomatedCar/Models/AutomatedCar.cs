@@ -1,16 +1,21 @@
 namespace AutomatedCar.Models
 {
     using Avalonia.Media;
+    using System;
     using SystemComponents;
 
     public class AutomatedCar : Car
     {
         private VirtualFunctionBus virtualFunctionBus;
-
+        private CollisionDetectionService collisionDetectionService;
+        
         public AutomatedCar(int x, int y, string filename)
             : base(x, y, filename)
         {
             this.virtualFunctionBus = new VirtualFunctionBus();
+            this.collisionDetectionService = new (this.virtualFunctionBus);
+            this.collisionDetectionService.OnCollided += (sender, o) =>
+                Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
             this.ZIndex = 10;
         }
 
