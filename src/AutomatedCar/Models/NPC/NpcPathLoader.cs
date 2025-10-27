@@ -9,7 +9,13 @@
         public static (List<NPCPath> Points, bool Repeating) LoadFromJson(string filePath)
         {
             var json = File.ReadAllText(filePath);
-            using var doc = JsonDocument.Parse(json);
+            using var doc = JsonDocument.Parse(
+                             json,
+                            new JsonDocumentOptions
+                 {
+                    CommentHandling = JsonCommentHandling.Skip,
+                    AllowTrailingCommas = true
+                 });
             var root = doc.RootElement;
 
             bool repeating = true;

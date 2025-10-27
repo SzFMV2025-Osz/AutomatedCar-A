@@ -1,8 +1,15 @@
 {
   "pedestrian": [
-    { "x": 1610, "y": 600, "rotation": 270, "speed": 20, "waitMs": 400 },
-    { "x": 1610, "y":  40, "rotation": 270, "speed": 20, "waitMs": 700 },
-    { "x": 1610, "y": 600, "rotation":  90, "speed": 20, "waitMs": 700 }
+    { "x": 1610, "y": 600, "rotation": 270, "speed": 20, "waitMs": 300 },  // S: south curb -> go up
+    { "x": 1610, "y":  40, "rotation": 270, "speed": 20, "waitMs": 400 },  // north curb
+
+    { "x": 1510, "y":  40, "rotation": 180, "speed": 20, "waitMs": 300 },  // short left on north sidewalk
+    { "x": 1610, "y":  40, "rotation":   0, "speed": 20, "waitMs": 300 },  // back to crosswalk
+
+    { "x": 1610, "y": 600, "rotation":  90, "speed": 20, "waitMs": 400 },  // down to south curb
+
+    { "x": 1750, "y": 600, "rotation":   0, "speed": 20, "waitMs": 300 },  // short right on south sidewalk
+    { "x": 1610, "y": 600, "rotation": 180, "speed": 20, "waitMs": 500 }   // back to S (loop)
   ],
   "repeating": true
 }
