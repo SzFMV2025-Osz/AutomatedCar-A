@@ -1,0 +1,8 @@
+{
+  "pedestrian": [
+    { "x": 1610, "y": 600, "rotation": 270, "speed": 20, "waitMs": 400 },
+    { "x": 1610, "y":  40, "rotation": 270, "speed": 20, "waitMs": 700 },
+    { "x": 1610, "y": 600, "rotation":  90, "speed": 20, "waitMs": 700 }
+  ],
+  "repeating": true
+}

@@ -1,0 +1,11 @@
+{
+  "car": [
+    { "x": 1200, "y": 420, "rotation": 0,   "speed": 5 },
+    { "x": 2400, "y": 420, "rotation": 0,   "speed": 5 },
+    { "x": 2400, "y": 380, "rotation": 270, "speed": 3 },
+    { "x": 1200, "y": 380, "rotation": 180, "speed": 5 },
+    { "x": 1200, "y": 420, "rotation": 90,  "speed": 3 }
+  ],
+  "repeating": true
+}
+
