@@ -1,5 +1,6 @@
 namespace AutomatedCar.SystemComponents;
 
+using Avalonia;
 using Models;
 using Packets;
 using System;
@@ -43,7 +44,8 @@ public class CameraSensor : SystemComponent
     /// </summary>
     public override void Process()
     {
-        this.cameraPacket.SetRelevantObjects(this.vision.IntersectsWith().Where(x => CanSee.Contains(x.WorldObjectType)).ToList());
+        this.vision.GetIntersections();
+        this.cameraPacket.SetRelevantObjects(this.vision.IntersectsWith.Where(x => CanSee.Contains(x.WorldObjectType)).ToList());
         this.cameraPacket.SetHighlightedObject(this.GetHighlightedObject());
         this.virtualFunctionBus.CameraPacket = this.cameraPacket;
     }

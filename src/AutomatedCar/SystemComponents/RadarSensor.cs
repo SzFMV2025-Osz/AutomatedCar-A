@@ -1,5 +1,6 @@
 namespace AutomatedCar.SystemComponents;
 
+using Avalonia;
 using Models;
 using Packets;
 using System;
@@ -43,7 +44,8 @@ public class RadarSensor : SystemComponent
     /// </summary>
     public override void Process()
     {
-        this.radarPacket.SetRelevantObjects(this.vision.IntersectsWith().Where(x => !CantSee.Contains(x.WorldObjectType)).ToList());
+        this.vision.GetIntersections();
+        this.radarPacket.SetRelevantObjects(this.vision.IntersectsWith.Where(x => !CantSee.Contains(x.WorldObjectType)).ToList());
         this.radarPacket.SetHighlightedObject(this.GetHighlightedObject());
         this.virtualFunctionBus.RadarPacket = this.radarPacket;
     }
@@ -51,7 +53,7 @@ public class RadarSensor : SystemComponent
     private WorldObject GetHighlightedObject()
     {
         var car = World.Instance.ControlledCar;
-        return this.cameraPacket.RelevantObjects
+        return this.radarPacket.RelevantObjects
             .OrderBy(x =>
                 Point.Distance(new Point(x.X, x.Y), new Point(car.X, car.Y)))
             .FirstOrDefault();
