@@ -12,6 +12,10 @@ using System.Linq;
 /// </summary>
 public class CollisionDetectionService : SystemComponent
 {
+    private bool collide;
+
+
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="CollisionDetectionService" /> class.
     /// </summary>
@@ -34,12 +38,17 @@ public class CollisionDetectionService : SystemComponent
     {
         AutomatedCar currentCar = World.Instance.ControlledCar;
 
+        this.collide = false;
         // Get all collidable WorldObjects in nearby vicinity of the currently controlled car.
         List<WorldObject> nearbyObjects = World.Instance.WorldObjects
             .Where(x => GeometryHelper.DistanceBetweenObjects(x, currentCar) < 435 && x.Collideable)
             .ToList();
 
         nearbyObjects.ForEach(this.InvokeEventIfCollided);
+        if (this.virtualFunctionBus.WritableDummyPacket != null)
+        {
+            this.virtualFunctionBus.WritableDummyPacket.IsColliding = this.collide;
+        }
     }
 
     /// <summary>
@@ -50,7 +59,8 @@ public class CollisionDetectionService : SystemComponent
     {
         if (GeometryHelper.CheckWorldObjectInCar(x))
         {
-            this.OnCollided?.Invoke(this, x);
+           this.collide = true;
+           this.OnCollided?.Invoke(this, x);
         }
     }
 }

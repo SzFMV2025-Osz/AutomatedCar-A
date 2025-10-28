@@ -51,7 +51,7 @@
                                 Source="resm:AutomatedCar.Assets.steering-wheel.png?assembly=AutomatedCar"
                                 RenderTransformOrigin="{Binding RotationPoint, Converter={x:Static visualization:RenderTransformOriginTransformer.Instance}}">
                             </Image>
-                            <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                            <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                                 <TextBlock Grid.Row="0" Grid.Column="0">X:</TextBlock>
                                 <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding X}"/>
                                 <TextBlock Grid.Row="1" Grid.Column="0">Y:</TextBlock>
@@ -64,7 +64,28 @@
                                 <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Car.VirtualFunctionBus.DummyPacket.DistanceX}"/>
                                 <TextBlock Grid.Row="5" Grid.Column="0">Distance Y:</TextBlock>
                                 <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Car.VirtualFunctionBus.DummyPacket.DistanceY}"/>
+                                <TextBlock Grid.Row="6" Grid.Column="0" IsVisible="{Binding Collideable, Mode=OneWay}">!!!IMPACT!!!</TextBlock>
+
                             </Grid>
+                          <StackPanel>
+                            <TextBlock Text="Highlighted Object" Margin="7" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <ListBox Items="" Height="100" Width="300">
+                              <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                  <StackPanel>
+                                    <TextBlock Text="" FontWeight="Bold" Foreground="Black"/>
+                                  </StackPanel>
+                                </DataTemplate>
+                              </ListBox.ItemTemplate>
+                            </ListBox>
+                                  <StackPanel>
+                                    <TextBlock Text="Warning" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Warning! IMPACT!!!" IsVisible="{Binding Car.VirtualFunctionBus.DummyPacket.IsColliding, Mode=OneWay}"/>
+
+                                  </StackPanel>
+                                
+                              
+                          </StackPanel>
                         </StackPanel>
                     </DataTemplate>
                 </ContentControl.ContentTemplate>
