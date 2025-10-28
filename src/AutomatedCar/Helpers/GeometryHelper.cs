@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -25,6 +26,30 @@ public class GeometryHelper
             new (x: a.X, y: a.Y),
             new (x: b.X, y: b.Y));
 
+    public static StreamGeometry CreateGeometryFromPoints(List<Point> points)
+    {
+        var geometry = new StreamGeometry();
+
+        using (var drawer = geometry.Open())
+        {
+            drawer.BeginFigure(isFilled: true, startPoint: points[0]);
+            points[1..].ForEach(drawer.LineTo);
+            drawer.EndFigure(isClosed: true);
+        }
+
+        return geometry;
+    }
+
+    public static float TranslateAlongAngleX(float x, float angle, float distance)
+    {
+        return (float)(x + (Math.Cos(angle) * distance));
+    }
+
+    public static float TranslateAlongAngleY(float y, float angle, float distance)
+    {
+        return (float)(y + (Math.Sin(angle) * distance));
+    }
+
     /// <summary>
     /// Check if a nearby object is in the drawn polygonal shape of the car.
     /// </summary>
@@ -33,25 +58,15 @@ public class GeometryHelper
     public static bool CheckWorldObjectInCar(WorldObject obj)
     {
         Polygon car = GetCarAbsolutePolygon();
-        var geom = new StreamGeometry();
-
-        // Draw the polygon using the geometry of the car.
-        using (var drawer = geom.Open())
-        {
-            drawer.BeginFigure(car.Points[0], isFilled: true);
-
-            foreach (var point in car.Points)
-            {
-                drawer.LineTo(point);
-            }
-
-            drawer.EndFigure(isClosed: true);
-        }
-
+        var geom = CreateGeometryFromPoints(car.Points.ToList());
         return PositionWorldObjectPointsToAbsolute(obj).Any(geom.FillContains);
     }
 
-    private static Polygon GetCarAbsolutePolygon()
+    /// <summary>
+    /// Transforms the World instance's <c>CurrentCar</c> to absolute positions.
+    /// </summary>
+    /// <returns>A <c>Polygon</c> representing a car on absolute coordinates.</returns>
+    public static Polygon GetCarAbsolutePolygon()
     {
         AutomatedCar car = World.Instance.ControlledCar;
         Rect carGeometryBounds = car.Geometry.Bounds;
@@ -67,7 +82,7 @@ public class GeometryHelper
         {
             CenterX = car.X - carGeometryBounds.Center.X + car.RotationPoint.X,
             CenterY = car.Y - carGeometryBounds.Center.Y + car.RotationPoint.Y,
-            Angle = 180 + car.Rotation,
+            Angle = 180 - car.Rotation,
         };
 
         // Return the polygon with the transformed points.
@@ -101,4 +116,40 @@ public class GeometryHelper
             .Select(x => x.Transform(rotation.Value).Transform(translation.Value))
             .ToList();
     }
+}
+
+/// <summary>
+/// Returns with the indices of the polygon defined within the car, mostly used for placing stuff on the car.
+/// </summary>
+public enum CarPolygonPosition
+{
+    /// <summary>
+    /// The front left part of the bumper.
+    /// </summary>
+    FrontLeft = 41,
+
+    /// <summary>
+    /// The front right part of the front bumper.
+    /// </summary>
+    FrontRight = 27,
+
+    /// <summary>
+    /// The left mirror of the car.
+    /// </summary>
+    LeftMirror = 55,
+
+    /// <summary>
+    /// The right mirror of the car.
+    /// </summary>
+    RightMirror = 13,
+
+    /// <summary>
+    /// The bottom left part of the rear bumper.
+    /// </summary>
+    RearLeft = 66,
+
+    /// <summary>
+    /// The bottom right part of the rear bumper.
+    /// </summary>
+    RearRight = 2,
 }

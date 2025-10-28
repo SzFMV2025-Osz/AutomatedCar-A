@@ -1,5 +1,6 @@
 namespace AutomatedCar.SystemComponents;
 
+using Avalonia;
 using Helpers;
 using Models;
 using System;
