@@ -7,12 +7,12 @@ using System;
 using System.Linq;
 
 /// <summary>
-/// Radar sensor
+/// Radar sensor.
 /// </summary>
 public class RadarSensor : SystemComponent
 {
     /// <summary>
-    /// Items that the radar cant see
+    /// Items that the radar cant see.
     /// </summary>
     private static readonly WorldObjectType[] CantSee =
     {
@@ -40,7 +40,7 @@ public class RadarSensor : SystemComponent
     }
 
     /// <summary>
-    /// Process
+    /// Process.
     /// </summary>
     public override void Process()
     {

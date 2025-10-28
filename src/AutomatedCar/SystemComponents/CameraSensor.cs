@@ -7,12 +7,12 @@ using System;
 using System.Linq;
 
 /// <summary>
-/// Camera sensor
+/// Camera sensor.
 /// </summary>
 public class CameraSensor : SystemComponent
 {
     /// <summary>
-    /// Items that the camera cant see
+    /// Items that the camera cant see.
     /// </summary>
     private static readonly WorldObjectType[] CanSee =
     {
@@ -40,7 +40,7 @@ public class CameraSensor : SystemComponent
     }
 
     /// <summary>
-    /// Process
+    /// Process.
     /// </summary>
     public override void Process()
     {

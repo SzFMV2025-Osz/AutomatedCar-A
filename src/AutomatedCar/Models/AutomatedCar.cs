@@ -8,7 +8,9 @@ namespace AutomatedCar.Models
     {
         private VirtualFunctionBus virtualFunctionBus;
         private CollisionDetectionService collisionDetectionService;
-        
+        private RadarSensor radarSensor;
+        private CameraSensor cameraSensor;
+
         public AutomatedCar(int x, int y, string filename)
             : base(x, y, filename)
         {
@@ -17,6 +19,12 @@ namespace AutomatedCar.Models
             this.collisionDetectionService.OnCollided += (sender, o) =>
                 Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
             this.ZIndex = 10;
+            this.radarSensor = new (this.virtualFunctionBus, new Triangle(60, 0, 10000, global::AutomatedCar.Helpers.GeometryHelper.GetCarAbsolutePolygon().Points[34]));
+            this.cameraSensor = new (this.virtualFunctionBus,
+                                new Triangle(60, 0, 4000,
+                                             global::AutomatedCar.Helpers.GeometryHelper.DividePoints(global::AutomatedCar.Helpers.GeometryHelper.GetCarAbsolutePolygon().Points[34],
+                                             global::AutomatedCar.Helpers.GeometryHelper.GetCarAbsolutePolygon().Points[0],
+                                             0.4)));
         }
 
         public VirtualFunctionBus VirtualFunctionBus { get => this.virtualFunctionBus; }
