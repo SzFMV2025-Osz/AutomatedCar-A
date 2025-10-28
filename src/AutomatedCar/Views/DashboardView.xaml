@@ -68,7 +68,7 @@
 
                             </Grid>
                           <StackPanel>
-                            <TextBlock Text="Relevant Objects" Margin="7" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Highlighted Object" Margin="7" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
                             <ListBox Items="" Height="100" Width="300">
                               <ListBox.ItemTemplate>
                                 <DataTemplate>
