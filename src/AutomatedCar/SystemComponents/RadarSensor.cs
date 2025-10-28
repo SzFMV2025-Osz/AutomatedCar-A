@@ -3,6 +3,7 @@ namespace AutomatedCar.SystemComponents;
 using Models;
 using Packets;
 using System;
+using Avalonia;
 using System.Linq;
 
 /// <summary>
@@ -51,7 +52,7 @@ public class RadarSensor : SystemComponent
     private WorldObject GetHighlightedObject()
     {
         var car = World.Instance.ControlledCar;
-        return this.cameraPacket.RelevantObjects
+        return this.radarPacket.RelevantObjects
             .OrderBy(x =>
                 Point.Distance(new Point(x.X, x.Y), new Point(car.X, car.Y)))
             .FirstOrDefault();

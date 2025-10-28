@@ -1,9 +1,8 @@
 namespace AutomatedCar.Models
 {
-    using Avalonia.Media;
     using System;
     using SystemComponents;
-
+    using Avalonia.Media;
     public class AutomatedCar : Car
     {
         private VirtualFunctionBus virtualFunctionBus;
@@ -15,14 +14,14 @@ namespace AutomatedCar.Models
             this.virtualFunctionBus = new VirtualFunctionBus();
             this.collisionDetectionService = new (this.virtualFunctionBus);
             this.collisionDetectionService.OnCollided += (sender, o) =>
-                Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
+            Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
             this.ZIndex = 10;
         }
 
         public VirtualFunctionBus VirtualFunctionBus { get => this.virtualFunctionBus; }
-
+        
         public int Revolution { get; set; }
-
+        
         public int Velocity { get; set; }
 
         public PolylineGeometry Geometry { get; set; }
