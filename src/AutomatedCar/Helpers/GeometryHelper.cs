@@ -13,7 +13,7 @@ using System.Text.Json;
 /// The GeometryHelper class is responsible for mostly collision detection, and for common mathematical calculations in
 /// the geometry of the World.
 /// </summary>
-public class GeometryHelper
+public static class GeometryHelper
 {
     /// <summary>
     /// Gets the distance between two points in float.
@@ -94,6 +94,21 @@ public class GeometryHelper
         };
     }
 
+    /// <summary>
+    /// Return a Point between a and b with ratio.
+    /// </summary>
+    /// <param name="a">First Point for divide.</param>
+    /// <param name="b">Second Point for divide.</param>
+    /// <param name="ratio">between 0 and 1 set the divide ratio.</param>
+    /// <returns>Return a Point between "a" and "b" with ratio.</returns>
+    public static Point DividePoints(Point a, Point b, double ratio)
+    {
+        return new Point(
+            a.X + (b.X - a.X) * ratio,
+            a.Y + (b.Y - a.Y) * ratio
+            );
+    }
+
     private static IList<Point> PositionWorldObjectPointsToAbsolute(WorldObject obj)
     {
         var objectGeometry = obj.Geometries.First();
@@ -152,4 +167,14 @@ public enum CarPolygonPosition
     /// The bottom right part of the rear bumper.
     /// </summary>
     RearRight = 2,
+
+    /// <summary>
+    /// The front middle part of the front bumber.
+    /// </summary>
+    FrontMiddle = 34,
+
+    /// <summary>
+    /// The rear middle part of the rear bumber.
+    /// </summary>
+    RearMiddle = 0,
 }

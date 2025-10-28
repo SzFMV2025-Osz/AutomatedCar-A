@@ -31,7 +31,6 @@ public class Triangle : ITriangle
         this.facingAngle = facingAngle;
         this.distance = distance;
         this.carPoint = carPoint;
-        this.TrianglePolygon = this.CreateTriangleAbsolutePolygon();
     }
 
     /// <summary>
@@ -42,7 +41,7 @@ public class Triangle : ITriangle
     /// <summary>
     /// Gets the triangle visually.
     /// </summary>
-    public Polygon TrianglePolygon { get; private set; }
+    public Polygon TrianglePolygon => CreateTriangleAbsolutePolygon();
 
     /// <summary>
     /// Similar function to the one in GeometryHelper, but it needs other coordinates in order to work.
@@ -52,7 +51,7 @@ public class Triangle : ITriangle
     {
         return World.Instance.WorldObjects
             .Where(x =>
-                x is not AutomatedCar &&
+                x != World.Instance.ControlledCar &&
                 x.Geometries
                     .First().Points
                     .Any(GeometryHelper.CreateGeometryFromPoints(this.TrianglePolygon.Points.ToList()).FillContains))
