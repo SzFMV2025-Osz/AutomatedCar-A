@@ -65,7 +65,6 @@
                                 <TextBlock Grid.Row="5" Grid.Column="0">Distance Y:</TextBlock>
                                 <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Car.VirtualFunctionBus.DummyPacket.DistanceY}"/>
                                 <TextBlock Grid.Row="6" Grid.Column="0" IsVisible="{Binding Collideable, Mode=OneWay}">!!!IMPACT!!!</TextBlock>
-
                             </Grid>
                           <StackPanel>
                             <TextBlock Text="Highlighted Object" Margin="7" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
