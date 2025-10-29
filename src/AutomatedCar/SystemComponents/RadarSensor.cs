@@ -48,8 +48,13 @@ public class RadarSensor : SystemComponent
     {
         this.vision.RefreshTriangleTo(GeometryHelper.GetCarAbsolutePolygon().Points[SensorValues.Radar.PositionIndex]);
         this.vision.GetIntersections();
-        this.radarPacket.SetRelevantObjects(this.vision.IntersectsWith.Where(x => !CantSee.Contains(x.WorldObjectType)).ToList());
-        this.radarPacket.SetHighlightedObject(this.GetHighlightedObject());
+
+        this.radarPacket.RelevantObjects =
+            this.vision.IntersectsWith
+                .Where(x => !CantSee.Contains(x.WorldObjectType))
+                .OrderBy(x => GeometryHelper.DistanceBetweenObjects(x, World.Instance.ControlledCar))
+                .ToList();
+        this.radarPacket.HightlightedObject = this.GetHighlightedObject();
         this.virtualFunctionBus.RadarPacket = this.radarPacket;
     }
 

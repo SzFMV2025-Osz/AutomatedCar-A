@@ -14,7 +14,7 @@ using System.Linq;
 public class CameraSensor : SystemComponent
 {
     /// <summary>
-    /// Items that the camera cant see.
+    /// Items that the camera can see.
     /// </summary>
     private static readonly WorldObjectType[] CanSee =
     {
@@ -48,8 +48,13 @@ public class CameraSensor : SystemComponent
     {
         this.vision.RefreshTriangleTo(GeometryHelper.GetCarAbsolutePolygon().Points[SensorValues.Camera.PositionIndex]);
         this.vision.GetIntersections();
-        this.cameraPacket.SetRelevantObjects(this.vision.IntersectsWith.Where(x => CanSee.Contains(x.WorldObjectType)).ToList());
-        this.cameraPacket.SetHighlightedObject(this.GetHighlightedObject());
+
+        this.cameraPacket.RelevantObjects =
+            this.vision.IntersectsWith
+                .Where(x => CanSee.Contains(x.WorldObjectType))
+                .OrderBy(x => GeometryHelper.DistanceBetweenObjects(x, World.Instance.ControlledCar))
+                .ToList();
+        this.cameraPacket.HightlightedObject = this.GetHighlightedObject();
         this.virtualFunctionBus.CameraPacket = this.cameraPacket;
     }
 
