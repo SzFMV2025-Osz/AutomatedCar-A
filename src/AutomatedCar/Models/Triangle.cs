@@ -114,15 +114,21 @@ public class Triangle : ITriangle
 
     private PolylineGeometry ReturnGeometryOrAbsolutePoint(WorldObject obj)
     {
-        var geometry = obj.Geometries.FirstOrDefault();
+        var geom = obj.Geometries.FirstOrDefault();
+        var polyGeom = new PolylineGeometry();
 
-        return geometry ??
-               new PolylineGeometry()
-               {
-                   Points =
-                   [
-                       new (x: obj.X, y: obj.Y)
-                   ],
-               };
+        if (geom == null)
+        {
+            polyGeom.Points =
+            [
+                new(x: obj.X, y: obj.Y)
+            ];
+        }
+        else
+        {
+            polyGeom.Points = GeometryHelper.PositionWorldObjectPointsToAbsolute(obj);
+        }
+
+        return polyGeom;
     }
 }
