@@ -18,10 +18,25 @@
   <ItemGroup>
     <AvaloniaResource Remove="Assets\oval.csv" />
     <AvaloniaResource Remove="Assets\oval.json" />
+    <AvaloniaResource Remove="assets\path\car.json" />
+    <AvaloniaResource Remove="Assets\Path\oval.car.json" />
+    <AvaloniaResource Remove="assets\path\ped.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Assets\Path\car.json" />
+    <EmbeddedResource Remove="Assets\Path\ped.json" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\oval.csv" />
     <None Remove="Assets\oval.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Path\car.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Path\ped.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.2.4" />
@@ -43,5 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <RuntimeHostConfigurationOption Include="System.Drawing.EnableUnixSupport" Value="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Assets\Path\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
