@@ -109,9 +109,15 @@ public static class GeometryHelper
             );
     }
 
-    private static IList<Point> PositionWorldObjectPointsToAbsolute(WorldObject obj)
+    public static IList<Point> PositionWorldObjectPointsToAbsolute(WorldObject obj)
     {
-        var objectGeometry = obj.Geometries.First();
+        var objectGeometry = obj.Geometries.FirstOrDefault() ?? new PolylineGeometry()
+        {
+            Points =
+            [
+                new Point(obj.X, obj.Y)
+            ],
+        };
 
         // Creating the rotational matrices for the points.
         var rotation = new RotateTransform
