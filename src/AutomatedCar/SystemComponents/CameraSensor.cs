@@ -52,6 +52,7 @@ public class CameraSensor : SystemComponent
         this.cameraPacket.RelevantObjects =
             this.vision.IntersectsWith
                 .Where(x => CanSee.Contains(x.WorldObjectType))
+                .OrderBy(x => GeometryHelper.DistanceBetweenObjects(x, World.Instance.ControlledCar))
                 .ToList();
         this.cameraPacket.HightlightedObject = this.GetHighlightedObject();
         this.virtualFunctionBus.CameraPacket = this.cameraPacket;
