@@ -13,7 +13,7 @@ namespace AutomatedCar.SystemComponents
 
         public IReadOnlyRadarPacket RadarPacket { get; set; }
 
-        public IReadOnlyRadarPacket CameraPacket { get; set; }
+        public IReadOnlyCameraPacket CameraPacket { get; set; }
 
         public VirtualFunctionBus()
         { 

@@ -12,7 +12,7 @@ public static class SensorValues
     public struct Camera
     {
         public const float FoV = 45;
-        public const float RelativeAngle = 0;
+        public const float RelativeAngle = 180;
         public const float Distance = 50 * 80;
         public const int PositionIndex = (int)CarPolygonPosition.FrontMiddle;
     }
@@ -24,7 +24,7 @@ public static class SensorValues
     public struct Radar
     {
         public const float FoV = 60;
-        public const float RelativeAngle = 0;
+        public const float RelativeAngle = 180;
         public const float Distance = 50 * 200;
         public const int PositionIndex = (int)CarPolygonPosition.FrontMiddle;
     }
