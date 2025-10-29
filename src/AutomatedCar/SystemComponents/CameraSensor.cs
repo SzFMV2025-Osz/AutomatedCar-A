@@ -1,6 +1,8 @@
 namespace AutomatedCar.SystemComponents;
 
 using Avalonia;
+using Avalonia.Controls.Shapes;
+using Helpers;
 using Models;
 using Packets;
 using System;
@@ -44,6 +46,7 @@ public class CameraSensor : SystemComponent
     /// </summary>
     public override void Process()
     {
+        this.vision.RefreshTriangleTo(GeometryHelper.GetCarAbsolutePolygon().Points[SensorValues.Camera.PositionIndex]);
         this.vision.GetIntersections();
         this.cameraPacket.SetRelevantObjects(this.vision.IntersectsWith.Where(x => CanSee.Contains(x.WorldObjectType)).ToList());
         this.cameraPacket.SetHighlightedObject(this.GetHighlightedObject());

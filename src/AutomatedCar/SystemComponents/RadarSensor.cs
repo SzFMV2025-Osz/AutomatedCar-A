@@ -5,6 +5,7 @@ using Models;
 using Packets;
 using System;
 using Avalonia;
+using Helpers;
 using System.Linq;
 
 /// <summary>
@@ -45,6 +46,7 @@ public class RadarSensor : SystemComponent
     /// </summary>
     public override void Process()
     {
+        this.vision.RefreshTriangleTo(GeometryHelper.GetCarAbsolutePolygon().Points[SensorValues.Radar.PositionIndex]);
         this.vision.GetIntersections();
         this.radarPacket.SetRelevantObjects(this.vision.IntersectsWith.Where(x => !CantSee.Contains(x.WorldObjectType)).ToList());
         this.radarPacket.SetHighlightedObject(this.GetHighlightedObject());

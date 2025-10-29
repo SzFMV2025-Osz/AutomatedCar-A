@@ -16,7 +16,6 @@ public class Triangle : ITriangle
     private float angle;
     private float facingAngle;
     private float distance;
-    private Point carPoint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Triangle"/> class.
@@ -25,12 +24,17 @@ public class Triangle : ITriangle
     /// <param name="facingAngle">The angle relative to the current car's facing.</param>
     /// <param name="distance">The triangle's height.</param>
     /// <param name="carPoint">An absolute point on the car <see cref="CarPolygonPosition"/> for inspiration.</param>
-    public Triangle(float angle, float facingAngle, float distance, Point carPoint)
+    public Triangle(float angle, float facingAngle, float distance)
     {
         this.angle = angle;
         this.facingAngle = facingAngle;
         this.distance = distance;
-        this.carPoint = carPoint;
+
+        // Only used for initialization in order to not get an Out of Range exception.
+        this.TrianglePolygon = new Polygon()
+        {
+            Points = this.CreateRelativeTrianglePoints(),
+        };
     }
 
     /// <summary>
@@ -41,7 +45,7 @@ public class Triangle : ITriangle
     /// <summary>
     /// Gets the triangle visually.
     /// </summary>
-    public Polygon TrianglePolygon => CreateTriangleAbsolutePolygon();
+    public Polygon TrianglePolygon { get; set; }
 
     /// <summary>
     /// Similar function to the one in GeometryHelper, but it needs other coordinates in order to work.
@@ -52,27 +56,27 @@ public class Triangle : ITriangle
         return World.Instance.WorldObjects
             .Where(x =>
                 x != World.Instance.ControlledCar &&
-                x.Geometries
-                    .First().Points
+                this.ReturnGeometryOrAbsolutePoint(x).Points
                     .Any(GeometryHelper.CreateGeometryFromPoints(this.TrianglePolygon.Points.ToList()).FillContains))
             .ToList();
+    }
+
+    public void RefreshTriangleTo(Point point)
+    {
+        this.TrianglePolygon = this.CreateTriangleAbsolutePolygon(point);
     }
 
     /// <summary>
     /// Creates a triangle shaped polygon, so it can be used for intersection detection, or drawing.
     /// </summary>
+    /// <param name="point">The point to place the triangle.</param>
     /// <returns>The polygon of a triangle.</returns>
     // FIXME: be a bit cleaner
-    public Polygon CreateTriangleAbsolutePolygon()
+    private Polygon CreateTriangleAbsolutePolygon(Point point)
     {
         var currentCarAngle = World.Instance.ControlledCar.Rotation;
 
-        List<Point> trianglePoints =
-        [
-            new (x: 0, y: 0),
-            new (x: this.distance * Math.Tan(double.DegreesToRadians(this.angle / 2)), y: this.distance),
-            new (x: -this.distance * Math.Tan(double.DegreesToRadians(this.angle / 2)), y: this.distance),
-        ];
+        List<Point> trianglePoints = this.CreateRelativeTrianglePoints();
 
         var rotation = new RotateTransform
         {
@@ -82,8 +86,8 @@ public class Triangle : ITriangle
         };
         var translation = new TranslateTransform
         {
-            X = this.carPoint.X,
-            Y = this.carPoint.Y,
+            X = point.X,
+            Y = point.Y,
         };
 
         Polygon triangle = new Polygon
@@ -96,5 +100,29 @@ public class Triangle : ITriangle
         };
 
         return triangle;
+    }
+
+    private List<Point> CreateRelativeTrianglePoints()
+    {
+        return
+        [
+            new (x: 0, y: 0),
+            new (x: this.distance * Math.Tan(double.DegreesToRadians(this.angle / 2)), y: this.distance),
+            new (x: -this.distance * Math.Tan(double.DegreesToRadians(this.angle / 2)), y: this.distance),
+        ];
+    }
+
+    private PolylineGeometry ReturnGeometryOrAbsolutePoint(WorldObject obj)
+    {
+        var geometry = obj.Geometries.FirstOrDefault();
+
+        return geometry ??
+               new PolylineGeometry()
+               {
+                   Points =
+                   [
+                       new (x: obj.X, y: obj.Y)
+                   ],
+               };
     }
 }

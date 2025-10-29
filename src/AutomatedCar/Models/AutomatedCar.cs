@@ -3,6 +3,8 @@ namespace AutomatedCar.Models
     using System;
     using SystemComponents;
     using Avalonia.Media;
+    using Helpers;
+
     public class AutomatedCar : Car
     {
         private VirtualFunctionBus virtualFunctionBus;
@@ -18,12 +20,20 @@ namespace AutomatedCar.Models
             this.collisionDetectionService.OnCollided += (sender, o) =>
             Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
             this.ZIndex = 10;
-            this.radarSensor = new (this.virtualFunctionBus, new Triangle(60, 0, 10000, global::AutomatedCar.Helpers.GeometryHelper.GetCarAbsolutePolygon().Points[34]));
-            this.cameraSensor = new (this.virtualFunctionBus,
-                                new Triangle(60, 0, 4000,
-                                             global::AutomatedCar.Helpers.GeometryHelper.DividePoints(global::AutomatedCar.Helpers.GeometryHelper.GetCarAbsolutePolygon().Points[34],
-                                             global::AutomatedCar.Helpers.GeometryHelper.GetCarAbsolutePolygon().Points[0],
-                                             0.4)));
+            
+            this.radarSensor = new RadarSensor(
+                this.virtualFunctionBus,
+                new Triangle(
+                    angle: SensorValues.Radar.FoV,
+                    facingAngle: SensorValues.Radar.RelativeAngle,
+                    distance: SensorValues.Radar.Distance));
+            
+            this.cameraSensor = new CameraSensor(
+                this.virtualFunctionBus,
+                new Triangle(
+                    angle: SensorValues.Camera.FoV,
+                    facingAngle: SensorValues.Camera.RelativeAngle,
+                    distance: SensorValues.Camera.Distance));
         }
 
         public VirtualFunctionBus VirtualFunctionBus { get => this.virtualFunctionBus; }
