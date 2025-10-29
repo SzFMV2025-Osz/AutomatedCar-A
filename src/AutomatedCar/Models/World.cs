@@ -11,6 +11,9 @@
     using Helpers;
     using Visualization;
     using Avalonia.Media;
+    using SkiaSharp;
+    using Svg;
+    using System.Linq;
 
     public class World
     {
@@ -128,15 +131,24 @@
                         transformGroup.Children.Add(rotate);
                         transformGroup.Children.Add(translate);
 
-                        var mx2 = new System.Drawing.Drawing2D.Matrix(rwo.M11, rwo.M12, rwo.M21, rwo.M22, wo.RotationPoint.X, wo.RotationPoint.Y);
-                        var mx = new System.Drawing.Drawing2D.Matrix();
-                        mx.RotateAt(Convert.ToSingle(wo.Rotation), new PointF(wo.RotationPoint.X, wo.RotationPoint.Y));
-                        mx.Translate(wo.RotationPoint.X, wo.RotationPoint.Y);
-                        PointF[] gpa = new PointF[geometry.Points.Count];
+                        // var mx2 = new System.Drawing.Drawing2D.Matrix(rwo.M11, rwo.M12, rwo.M21, rwo.M22, wo.RotationPoint.X, wo.RotationPoint.Y);
 
-                        var gpa2 = this.ToDotNetPoints(geometry.Points).ToArray();
+                        var mx2 = new SKMatrix
+                        {
+                            ScaleX = rwo.M11,
+                            SkewX = rwo.M12,
+                            TransX = wo.RotationPoint.X,
+                            ScaleY = rwo.M22,
+                            SkewY = rwo.M21,
+                            TransY = wo.RotationPoint.Y,
+                        };
+
+                        PointF[] gpa = new PointF[geometry.Points.Count];
+                        var m = SKMatrix.CreateRotationDegrees((float)wo.Rotation, wo.RotationPoint.X, wo.RotationPoint.Y);
+                        m = m.PostConcat(SKMatrix.CreateTranslation(wo.RotationPoint.X, wo.RotationPoint.Y));
+                        var gpa2 = geometry.Points.Select(x => new SKPoint((float)x.X, (float)x.Y)).ToArray();
                         this.ToDotNetPoints(geometry.Points).CopyTo(gpa);
-                        mx2.TransformPoints(gpa2);
+                        mx2.MapPoints(gpa2);
                         geometry.Points = this.ToAvaloniaPoints(gpa2);
                     }
                 }
@@ -167,7 +179,7 @@
             return result;
         }
 
-        private Avalonia.Points ToAvaloniaPoints(IEnumerable<PointF> points)
+        private Avalonia.Points ToAvaloniaPoints(IEnumerable<SKPoint> points)
         {
             var result = new Avalonia.Points();
             foreach (var p in points)
@@ -234,10 +246,11 @@
             Dictionary<string, string> result = new();
             foreach (RotationPoint rp in rotationPoints)
             {
-                var img = new System.Drawing.Bitmap(Assembly.GetExecutingAssembly()
-                        .GetManifestResourceStream($"AutomatedCar.Assets.WorldObjects.{rp.Type}.png"));
-                var x = rp.Y / (double)img.Size.Width * 100.0;
-                var y = rp.X / (double)img.Size.Height * 100.0;
+                SKBitmap im = SKBitmap.Decode(Assembly.GetExecutingAssembly().GetManifestResourceStream($"AutomatedCar.Assets.WorldObjects.{rp.Type}.png"));
+                /*var x = rp.Y / (double)im.Size.Width * 100.0;
+                var y = rp.X / (double)im.Size.Height * 100.0;*/
+                var x = rp.Y / (float)im.Width * 100.0;
+                var y = rp.X / (float)im.Height * 100.0;
                 result.Add(rp.Type, x.ToString("0.00", nfi) + "%," + y.ToString("0.00", nfi) + "%");
             }
 
@@ -323,20 +336,19 @@
             return result;
         }
 
-        public GraphicsPath AddGeometry()
+        public SKPath AddGeometry()
         {
-            GraphicsPath geom = new();
-            List<Point> points = new();
-            points.Add(new Point(50, 50));
-            points.Add(new Point(50, 100));
-            points.Add(new Point(100, 50));
-            points.Add(new Point(50, 50));
-            geom.AddPolygon(points.ToArray());
-            geom.CloseFigure();
+            List<SKPoint> points = new();
+            points.Add(new SKPoint(50, 50));
+            points.Add(new SKPoint(50, 100));
+            points.Add(new SKPoint(100, 50));
+            points.Add(new SKPoint(50, 50));
 
-            // geom.PathPoints
+            var path = new SKPath();
+            path.AddPoly(points.Select(x => new SKPoint(x.X, x.Y)).ToArray());
+            path.Close();
 
-            return geom;
+            return path;
         }
     }
 }

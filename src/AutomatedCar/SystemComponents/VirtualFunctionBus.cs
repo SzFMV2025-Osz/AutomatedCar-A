@@ -7,7 +7,20 @@ namespace AutomatedCar.SystemComponents
     {
         private List<SystemComponent> components = new List<SystemComponent>();
 
-        public IReadOnlyDummyPacket DummyPacket { get; set; }
+        public IReadOnlyDummyPacket DummyPacket { get;}
+
+        internal DummyPacket WritableDummyPacket { get; }
+
+        public IReadOnlyRadarPacket RadarPacket { get; set; }
+
+        public IReadOnlyCameraPacket CameraPacket { get; set; }
+
+        public VirtualFunctionBus()
+        { 
+         this.WritableDummyPacket = new DummyPacket();
+
+         this.DummyPacket=this.WritableDummyPacket;
+        }
 
         public void RegisterComponent(SystemComponent component)
         {
