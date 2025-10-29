@@ -9,8 +9,8 @@
 
         public int X { get; }
         public int Y { get; }
-        public int Rotation { get; }   // fok
-        public int Speed { get; }      // px/s
-        public int WaitMs { get; }     // opcionális várakozás a ponton
+        public int Rotation { get; }  
+        public int Speed { get; }      
+        public int WaitMs { get; }    
     }
 }

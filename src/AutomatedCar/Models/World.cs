@@ -20,7 +20,7 @@
 
     public class World
     {
-        // --- NPC-khez manager ---
+        
         public NpcNs.NPCManager npcManager = new NpcNs.NPCManager();
 
         private int controlledCarPointer = 0;
@@ -97,14 +97,14 @@
 
                 if (worldObjectPolygons.ContainsKey(rwo.Type))
                 {
-                    // deep copy
+                   
                     foreach (var g in worldObjectPolygons[rwo.Type])
                     {
                         wo.Geometries.Add(new PolylineGeometry(g.Points, false));
                         wo.RawGeometries.Add(new PolylineGeometry(g.Points, false));
                     }
 
-                    // apply rotation
+                    
                     foreach (var geometry in wo.Geometries)
                     {
                         var rotate = new RotateTransform(wo.Rotation);
@@ -138,11 +138,11 @@
                 this.AddObject(wo);
             }
 
-            // Map-aware path files
+          
             var basePath = Path.Combine(AppContext.BaseDirectory, "Assets", "Path");
-            string mapKey = ExtractMapKey(filename); // e.g., "oval", "test_world"
+            string mapKey = ExtractMapKey(filename); 
 
-            // Prefer map-specific files, then well-known map aliases, then generic defaults
+         
             string carFile = FirstExisting(basePath,
                 new[] { $"{mapKey}.car.json", "oval.car.json", "car.json" });
             string pedFile = FirstExisting(basePath,
@@ -154,13 +154,13 @@
             if (pedFile != null && File.Exists(pedFile))
                 BootstrapNpcsFromFile(pedFile, isPedestrian: true);
 
-            // tick indítás
-            try { npcManager.Start(); } catch { /* ha már fut, ok */ }
+           
+            try { npcManager.Start(); } catch { }
         }
 
         private static string ExtractMapKey(string resourceName)
         {
-            // example: "AutomatedCar.Assets.oval.json" -> "oval"
+            
             var parts = resourceName.Split('.');
             return (parts.Length >= 3) ? parts[^2] : "default";
         }
@@ -168,7 +168,6 @@
         private static string FirstExisting(string dir, IEnumerable<string> names)
             => names.Select(n => Path.Combine(dir, n)).FirstOrDefault(File.Exists);
 
-        // ---------- NPC bootstrap (fájl alapú, a saját NpcPathLoader-edhez) ----------
 
         private static string ResolveSpriteOrFallback(string desired, string fallback)
         {
@@ -181,7 +180,7 @@
             var (pts, repeat) = NpcNs.NpcPathLoader.LoadFromJson(filePath);
             if (pts == null || pts.Count == 0) return;
 
-            // Pick a nearby starting index: closest to first crosswalk (so it's visible)
+            
             int startIndex = 0;
             var cw = this.WorldObjects.FirstOrDefault(o => o.WorldObjectType == WorldObjectType.Crosswalk);
             if (cw != null)
@@ -198,24 +197,24 @@
             if (isPedestrian)
             {
                 var ped = new NpcNs.Pedestrian(pts[startIndex].X, pts[startIndex].Y, "woman.png");
-                ped.ZIndex = 10; // ensure above road/crosswalk
+                ped.ZIndex = 10; 
                 ped.Load(pts[startIndex].Speed, repeating: repeat, currentPoint: startIndex, points: pts);
                 npcManager.Add(ped);
                 AddObject(ped);
             }
             else
             {
-                // Prefer black car; if missing, fall back to white (not red)
-                var sprite = ResolveSpriteOrFallback("car_3_black.png", "car_1_white.png");
+                
+                var sprite = ResolveSpriteOrFallback("car_3_black.png","car_2_blue.png");
                 var car = new NpcNs.NPCCar(pts[startIndex].X, pts[startIndex].Y, sprite);
-                car.ZIndex = 10; // ensure above road
+                car.ZIndex = 10; 
                 car.Load(pts[startIndex].Speed, repeating: repeat, currentPoint: startIndex, points: pts);
                 npcManager.Add(car);
                 AddObject(car);
             }
         }
 
-        // ---------- segéd függvények ----------
+       
 
         private List<System.Drawing.PointF> ToDotNetPoints(IList<Avalonia.Point> points)
         {
