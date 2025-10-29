@@ -1,23 +1,45 @@
 namespace AutomatedCar.Models
 {
-    using Avalonia.Media;
+    using System;
     using SystemComponents;
+    using Avalonia.Media;
+    using Helpers;
 
     public class AutomatedCar : Car
     {
         private VirtualFunctionBus virtualFunctionBus;
+        private CollisionDetectionService collisionDetectionService;
+        private RadarSensor radarSensor;
+        private CameraSensor cameraSensor;
 
         public AutomatedCar(int x, int y, string filename)
             : base(x, y, filename)
         {
             this.virtualFunctionBus = new VirtualFunctionBus();
+            this.collisionDetectionService = new (this.virtualFunctionBus);
+            this.collisionDetectionService.OnCollided += (sender, o) =>
+            Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
             this.ZIndex = 10;
+            
+            this.radarSensor = new RadarSensor(
+                this.virtualFunctionBus,
+                new Triangle(
+                    angle: SensorValues.Radar.FoV,
+                    facingAngle: SensorValues.Radar.RelativeAngle,
+                    distance: SensorValues.Radar.Distance));
+            
+            this.cameraSensor = new CameraSensor(
+                this.virtualFunctionBus,
+                new Triangle(
+                    angle: SensorValues.Camera.FoV,
+                    facingAngle: SensorValues.Camera.RelativeAngle,
+                    distance: SensorValues.Camera.Distance));
         }
 
         public VirtualFunctionBus VirtualFunctionBus { get => this.virtualFunctionBus; }
-
+        
         public int Revolution { get; set; }
-
+        
         public int Velocity { get; set; }
 
         public PolylineGeometry Geometry { get; set; }

@@ -303,7 +303,7 @@
             }
         }
 
-        public GraphicsPath AddGeometry()
+        public SKPath AddGeometry()
         {
             GraphicsPath geom = new();
             List<Point> points = new() { new Point(50, 50), new Point(50, 100), new Point(100, 50), new Point(50, 50) };
