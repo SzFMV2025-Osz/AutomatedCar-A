@@ -199,6 +199,8 @@
                 var ped = new NpcNs.Pedestrian(pts[startIndex].X, pts[startIndex].Y, "woman.png");
                 ped.ZIndex = 10; 
                 ped.Load(pts[startIndex].Speed, repeating: repeat, currentPoint: startIndex, points: pts);
+                ped.Collideable = true;
+                ped.WorldObjectType = WorldObjectType.Pedestrian;
                 npcManager.Add(ped);
                 AddObject(ped);
             }
@@ -209,6 +211,8 @@
                 var car = new NpcNs.NPCCar(pts[startIndex].X, pts[startIndex].Y, sprite);
                 car.ZIndex = 10; 
                 car.Load(pts[startIndex].Speed, repeating: repeat, currentPoint: startIndex, points: pts);
+                car.Collideable = true;
+                car.WorldObjectType = WorldObjectType.Car;
                 npcManager.Add(car);
                 AddObject(car);
             }
