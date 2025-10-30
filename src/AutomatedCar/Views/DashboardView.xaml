@@ -28,9 +28,9 @@
                         <StackPanel>
                             <TextBlock Text="F1: Help"/>
                             <Grid ColumnDefinitions="2*,2*" RowDefinitions="50,15">
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Car.Revolution}" FontSize="40" TextAlignment="Center"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Car.Powertrain.PowertrainPacket.RPM}" FontSize="40" TextAlignment="Center"/>
                                 <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center">rpm</TextBlock>
-                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Car.Velocity}" FontSize="40" TextAlignment="Center"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Car.Powertrain.PowertrainPacket.Speed}" FontSize="40" TextAlignment="Center"/>
                                 <TextBlock Grid.Row="1" Grid.Column="1" TextAlignment="Center">km/h</TextBlock>
                             </Grid>
                             <Separator Height="15"></Separator>
@@ -38,20 +38,23 @@
                                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Text="L" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Text="R" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Row="0" Grid.Column="1" Text="N" FontSize="20" TextAlignment="Center"/>
-                                <TextBlock Grid.Row="1" Grid.Column="1" Text="Gear" TextAlignment="Center"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Car.Powertrain.PowertrainPacket.GearStage}" TextAlignment="Center"/>
                             </Grid>
                             <Separator Height="15"></Separator>
                             <TextBlock Text="Throttle"/>
-                            <ProgressBar Value="50"></ProgressBar>
+                            <ProgressBar Value="{Binding Car.VirtualFunctionBus.KeyboardHandlerPacket.ThrottlePercentage}"></ProgressBar>
                             <TextBlock Text="Brake"/>
-                            <ProgressBar Value="50"></ProgressBar>
+                            <ProgressBar Value="{Binding Car.VirtualFunctionBus.KeyboardHandlerPacket.BrakePercentage}"></ProgressBar>
                             <Separator Height="12"></Separator>
-                            <Image
-                                Width="90" Height="90"
-                                Source="resm:AutomatedCar.Assets.steering-wheel.png?assembly=AutomatedCar"
-                                RenderTransformOrigin="{Binding RotationPoint, Converter={x:Static visualization:RenderTransformOriginTransformer.Instance}}">
-                            </Image>
-                            <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                          <Image
+                              Width="90" Height="90"
+                              Source="resm:AutomatedCar.Assets.steering-wheel.png?assembly=AutomatedCar">
+                            <Image.RenderTransform>
+                              <RotateTransform Angle="{Binding Car.VirtualFunctionBus.KeyboardHandlerPacket.WheelPercentage}" />
+                            </Image.RenderTransform>
+                            
+                          </Image>
+                            <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
                                 <TextBlock Grid.Row="0" Grid.Column="0">X:</TextBlock>
                                 <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding X}"/>
                                 <TextBlock Grid.Row="1" Grid.Column="0">Y:</TextBlock>
