@@ -8,9 +8,9 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class GearBox : IGearBox
+    public class GearBox : IGearBox // 7572rmp-nél akad ki.
     {
-        private double[] gearRatios = { 0.003, 0.005, 0.01, 0.015, 0.0225, 0.027 };
+        private double[] gearRatios = { 0.004, 0.011, 0.016, 0.0225, 0.027, 0.035 }; // 0.05-el megy 328-at. (0.004, 0.009, 0.015, 0.0225, 0.025, 0.033)
         private int currentInsideGearStage = 0;
         private int nextLowRevolutionChangeValue = 1000;
         public float Speed { get; set; } // velocity = revolution * gearRation
