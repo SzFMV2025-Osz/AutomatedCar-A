@@ -17,6 +17,7 @@ namespace AutomatedCar.SystemComponents
 
         public IReadOnlyCameraPacket CameraPacket { get; set; }
         public IReadOnlyAccPacket AccPacket { get; set; }
+        public IReadOnlyTempomatPacket TempomatPacket { get; set; }
         public IReadOnlyRelevantObjects RelevantObjectsPacket { get; set; }
 
         public VirtualFunctionBus()
