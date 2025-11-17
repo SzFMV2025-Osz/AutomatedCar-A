@@ -12,6 +12,7 @@
     {
         private const int MinSpeedKmh = 30;
         private const int MaxSpeedKmh = 160;
+        private int RoadSignSpeedLimit = MaxSpeedKmh;
 
         private readonly AccPacket accPacket;
 
@@ -117,9 +118,21 @@
 
         private int GetSpeedLimitFromCamera()
         {
-            // Amíg a táblafelismerő nincs kész, ne korlátozzon semmit.
-            return MaxSpeedKmh;
+            var car = World.Instance.ControlledCar;
+            var camera = this.virtualFunctionBus.CameraPacket;
+            var roadSign = camera.RelevantObjects
+                .Where(o => o.WorldObjectType == WorldObjectType.RoadSign)
+                .OrderBy(o => GeometryHelper.DistanceBetweenObjects(o, car))
+                .FirstOrDefault();
+
+            if (roadSign != null)
+            {
+                this.RoadSignSpeedLimit = roadSign?.SpeedLimit ?? this.RoadSignSpeedLimit;
+            }
+
+            return this.RoadSignSpeedLimit;
         }
+
         private int ApplyFrontCarLogic(int targetSpeed, double ownSpeedMps)
         {
             var radar = this.virtualFunctionBus.RadarPacket;
