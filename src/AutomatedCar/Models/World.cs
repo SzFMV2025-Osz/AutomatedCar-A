@@ -85,6 +85,7 @@
                     this.DetermineZIndex(rwo.Type),
                     this.DetermineCollidablity(rwo.Type),
                     this.DetermineType(rwo.Type));
+                wo.SpeedLimit = this.DetermineSpeedLimit(rwo.Type);
 
                 (int x, int y) rp = (0, 0);
                 if (rotationPoints.ContainsKey(rwo.Type)) rp = rotationPoints[rwo.Type];
@@ -492,6 +493,25 @@
             path.Close();
 
             return path;
+        }
+
+        private int? DetermineSpeedLimit(string type)
+        {
+            if (!type.Contains("roadsign_speed_"))
+            {
+                return null;
+            }
+
+            try
+            {
+                return int.Parse(type.Substring(15));
+            }
+            catch
+            {
+                return null;
+            }
+
+            return null;
         }
     }
 }

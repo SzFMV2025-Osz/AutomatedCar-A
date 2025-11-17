@@ -79,5 +79,7 @@ namespace AutomatedCar.Models
         public bool Collideable { get; set; }
 
         public WorldObjectType WorldObjectType { get; set; }
+
+        public int? SpeedLimit { get; set; }
     }
 }
