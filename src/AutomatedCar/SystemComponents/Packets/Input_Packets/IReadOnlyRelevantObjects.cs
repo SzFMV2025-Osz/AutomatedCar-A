@@ -7,7 +7,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class IReadOnlyRelevantObjects
+    public interface IReadOnlyRelevantObjects
     {
         int LimitSpeed { get; }
         List<RelevantObject> RelevantObjects { get; set; }
