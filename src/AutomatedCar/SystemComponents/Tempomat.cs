@@ -111,5 +111,15 @@
             else
                 UserSetSpeed = SpeedValid(UserSetSpeed);
         }
+
+        public void ActiveTempomatProcess()
+        {
+            CurrentSpeed = this.virtualFunctionBus.PowertrainPacket.Speed;
+            if (CurrentSpeed < GoalSpeed)
+                Accelerate();
+
+            else if (CurrentSpeed > GoalSpeed)
+                Decelerate();
+        }
     }
 }
