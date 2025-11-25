@@ -22,16 +22,27 @@
         private const int speedChangeInterval = 10;
         int GoalSpeed
         {
-            get  ; set;
+            get
+            {
+                return GetGoalSpeed();
+            }
         }
-        public Tempomat(VirtualFunctionBus virtualFunctionBus) : base(virtualFunctionBus)
+        public Tempomat(VirtualFunctionBus VirtualFunctionBus) : base(VirtualFunctionBus)
         {
-            
+            UserSetSpeed = SpeedValid(CurrentSpeed);
+            virtualFunctionBus = VirtualFunctionBus;
+            LimitSpeed = maximumSpeed;
+            this.tempomatPacket = new TempomatPacket();
+            this.virtualFunctionBus.TempomatPacket = (IReadOnlyTempomatPacket)this.tempomatPacket;
         }
 
         public override void Process()
         {
-            throw new NotImplementedException();
+            this.LimitSpeed = this.virtualFunctionBus.RelevantObjectsPacket.LimitSpeed;
+            if (this.virtualFunctionBus.TempomatPacket.IsEnabled)
+            {
+                ActiveTempomatProcess();
+            }
         }
 
         private int SpeedValid(int speed)
