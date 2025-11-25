@@ -75,7 +75,6 @@
 
         private void Accelerate()
         {
-
             int result = (int)Math.Floor(Convert.ToDouble(CurrentSpeed + GetGoalSpeed() / 100 + CurrentSpeed / 2 + 50));
             if (result > 100)
                 ThrottlePercentage = 100;
@@ -84,6 +83,17 @@
             tempomatPacket.BrakePercentage = 0;
             tempomatPacket.ThrottlePercentage = ThrottlePercentage;
 
+        }
+
+        private void Decelerate()
+        {
+            int result = (int)Math.Floor(Convert.ToDouble(CurrentSpeed + GetGoalSpeed() / 100 + 50));
+            if (result > 100)
+                BrakePercentage = 33;
+            else
+                BrakePercentage = (int)Math.Floor(Convert.ToDouble(result / 3));
+            tempomatPacket.ThrottlePercentage = 0;
+            tempomatPacket.BrakePercentage = BrakePercentage;
         }
     }
 }
