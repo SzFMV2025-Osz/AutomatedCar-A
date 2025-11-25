@@ -26,11 +26,18 @@
         }
         public Tempomat(VirtualFunctionBus virtualFunctionBus) : base(virtualFunctionBus)
         {
+            
         }
 
         public override void Process()
         {
             throw new NotImplementedException();
         }
+
+        private int SpeedValid(int speed)
+        {
+            return Math.Min(Math.Max(speed, minimumSpeed), maximumSpeed);
+        }
+
     }
 }
