@@ -48,5 +48,42 @@
             }
             return Math.Min(SpeedValid(UserSetSpeed), LimitSpeed);
         }
+
+        private bool IsSpeedValid(int speed)
+        {
+            if (speed > maximumSpeed) { return false; }
+            else if (speed < minimumSpeed) { return false; }
+            return true;
+        }
+
+        public void ToggleACC(string key)
+        {
+            if (key == "OFF")
+            {
+                tempomatPacket.IsEnabled = false;
+            }
+            else
+            {
+                IsEnabled = !IsEnabled;
+                tempomatPacket.IsEnabled = !tempomatPacket.IsEnabled;
+                if (IsEnabled)
+                {
+                    UserSetSpeed = SpeedValid(CurrentSpeed);
+                }
+            }
+        }
+
+        private void Accelerate()
+        {
+
+            int result = (int)Math.Floor(Convert.ToDouble(CurrentSpeed + GetGoalSpeed() / 100 + CurrentSpeed / 2 + 50));
+            if (result > 100)
+                ThrottlePercentage = 100;
+            else
+                ThrottlePercentage = result;
+            tempomatPacket.BrakePercentage = 0;
+            tempomatPacket.ThrottlePercentage = ThrottlePercentage;
+
+        }
     }
 }
