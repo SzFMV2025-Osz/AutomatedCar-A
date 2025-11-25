@@ -95,5 +95,21 @@
             tempomatPacket.ThrottlePercentage = 0;
             tempomatPacket.BrakePercentage = BrakePercentage;
         }
+
+        public void IncreaseGoalSpeed()
+        {
+            if (IsSpeedValid(UserSetSpeed + speedChangeInterval))
+                UserSetSpeed += speedChangeInterval;
+            else
+                UserSetSpeed = SpeedValid(UserSetSpeed);
+        }
+
+        public void DecreaseGoalSpeed()
+        {
+            if (IsSpeedValid(UserSetSpeed - speedChangeInterval))
+                UserSetSpeed -= speedChangeInterval;
+            else
+                UserSetSpeed = SpeedValid(UserSetSpeed);
+        }
     }
 }
