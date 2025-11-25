@@ -39,5 +39,14 @@
             return Math.Min(Math.Max(speed, minimumSpeed), maximumSpeed);
         }
 
+        private int GetGoalSpeed()
+        {
+            var temp = SpeedValid(Math.Min(UserSetSpeed, LimitSpeed));
+            if (temp == null)
+            {
+                return maximumSpeed;
+            }
+            return Math.Min(SpeedValid(UserSetSpeed), LimitSpeed);
+        }
     }
 }

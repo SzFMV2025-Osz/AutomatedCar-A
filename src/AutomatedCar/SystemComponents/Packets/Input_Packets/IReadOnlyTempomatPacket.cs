@@ -8,10 +8,10 @@
 
     public interface IReadOnlyTempomatPacket
     {
-        int userSetSpeed { get; set; }
-        int limitSpeed { get; set; }
-        int currentSpeed { get; set; }
-        bool isEnabled { get; set; }
+        int UserSetSpeed { get; set; }
+        int LimitSpeed { get; set; }
+        int CurrentSpeed { get; set; }
+        bool IsEnabled { get; set; }
         int BrakePercentage { get; set; }
         int ThrottlePercentage { get; set; }
     }
