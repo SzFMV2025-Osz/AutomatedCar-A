@@ -16,6 +16,7 @@
     using SkiaSharp;
     using Svg;
     using System.Linq;
+    using System.Diagnostics;
 	using NpcNs = global::AutomatedCar.Models.NPC;
 
     public class World
@@ -113,8 +114,6 @@
                         transformGroup.Children.Add(rotate);
                         transformGroup.Children.Add(translate);
 
-                        // var mx2 = new System.Drawing.Drawing2D.Matrix(rwo.M11, rwo.M12, rwo.M21, rwo.M22, wo.RotationPoint.X, wo.RotationPoint.Y);
-
                         var mx2 = new SKMatrix
                         {
                             ScaleX = rwo.M11,
@@ -138,24 +137,79 @@
                 this.AddObject(wo);
             }
 
-          
-            var basePath = Path.Combine(AppContext.BaseDirectory, "Assets", "Path");
-            string mapKey = ExtractMapKey(filename); 
+    
+    var basePath = Path.Combine(AppContext.BaseDirectory, "Assets", "Path");
+    string mapKey = ExtractMapKey(filename);
 
-         
-            string carFile = FirstExisting(basePath,
-                new[] { $"{mapKey}.car.json", "oval.car.json", "car.json" });
-            string pedFile = FirstExisting(basePath,
-                new[] { $"{mapKey}.ped.json", "ped.json" });
+    
+    string alt1 = mapKey.Contains("world") ? mapKey.Replace("world", "word") : null;
+    string alt2 = mapKey.Contains("_") ? mapKey.Replace("_", "") : null;
 
-            if (carFile != null && File.Exists(carFile))
-                BootstrapNpcsFromFile(carFile, isPedestrian: false);
+    var carCandidates = new List<string> { $"{mapKey}.car.json" };
+    if (!string.IsNullOrEmpty(alt1)) carCandidates.Add($"{alt1}.car.json");
+    if (!string.IsNullOrEmpty(alt2)) carCandidates.Add($"{alt2}.car.json");
+    carCandidates.Add("car.json");
 
-            if (pedFile != null && File.Exists(pedFile))
-                BootstrapNpcsFromFile(pedFile, isPedestrian: true);
+    string carFile = FirstExisting(basePath, carCandidates);
 
-           
-            try { npcManager.Start(); } catch { }
+    
+    if (carFile == null)
+    {
+        var asm = Assembly.GetExecutingAssembly();
+        foreach (var candidate in carCandidates)
+        {
+            var resName = $"AutomatedCar.Assets.Path.{candidate}";
+            using var s = asm.GetManifestResourceStream(resName);
+            if (s != null)
+            {
+                var tempPath = Path.Combine(Path.GetTempPath(), candidate);
+                using var sr = new StreamReader(s);
+                File.WriteAllText(tempPath, sr.ReadToEnd());
+                carFile = tempPath;
+                break;
+            }
+        }
+    }
+
+   
+    string pedFile = null;
+    if (!string.Equals(mapKey, "oval", StringComparison.OrdinalIgnoreCase))
+    {
+        var pedCandidates = new List<string> { $"{mapKey}.ped.json" };
+        if (!string.IsNullOrEmpty(alt1)) pedCandidates.Add($"{alt1}.ped.json");
+        if (!string.IsNullOrEmpty(alt2)) pedCandidates.Add($"{alt2}.ped.json");
+        pedCandidates.Add("ped.json");
+
+        pedFile = FirstExisting(basePath, pedCandidates);
+
+        if (pedFile == null)
+        {
+            var asm = Assembly.GetExecutingAssembly();
+            foreach (var candidate in pedCandidates)
+            {
+                var resName = $"AutomatedCar.Assets.Path.{candidate}";
+                using var s = asm.GetManifestResourceStream(resName);
+                if (s != null)
+                {
+                    var tempPath = Path.Combine(Path.GetTempPath(), candidate);
+                    using var sr = new StreamReader(s);
+                    File.WriteAllText(tempPath, sr.ReadToEnd());
+                    pedFile = tempPath;
+                    break;
+                }
+            }
+        }
+    }
+
+    Debug.WriteLine($"[World] mapKey={mapKey} carFile={(carFile ?? "null")} pedFile={(pedFile ?? "null")}");
+
+    if (carFile != null && File.Exists(carFile))
+        BootstrapNpcsFromFile(carFile, isPedestrian: false);
+
+    if (pedFile != null && File.Exists(pedFile))
+        BootstrapNpcsFromFile(pedFile, isPedestrian: true);
+
+    try { npcManager.Start(); } catch { }
         }
 
         private static string ExtractMapKey(string resourceName)
@@ -171,16 +225,41 @@
 
         private static string ResolveSpriteOrFallback(string desired, string fallback)
         {
-            var p = Path.Combine(AppContext.BaseDirectory, "Assets", "WorldObjects", desired);
-            return File.Exists(p) ? desired : fallback;
+            var dir = Path.Combine(AppContext.BaseDirectory, "Assets", "WorldObjects");
+            var path = Path.Combine(dir, desired);
+
+            if (File.Exists(path)) return desired;
+
+           
+            try
+            {
+                var asm = Assembly.GetExecutingAssembly();
+                var resName = $"AutomatedCar.Assets.WorldObjects.{desired}";
+                using var s = asm.GetManifestResourceStream(resName);
+                if (s != null)
+                {
+                    Directory.CreateDirectory(dir);
+                    using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                    s.CopyTo(fs);
+                    Debug.WriteLine($"[ResolveSpriteOrFallback] extracted embedded resource {resName} -> {path}");
+                    return desired;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ResolveSpriteOrFallback] extraction failed: {ex.Message}");
+            }
+
+         
+            return fallback;
         }
 
         private void BootstrapNpcsFromFile(string filePath, bool isPedestrian)
         {
             var (pts, repeat) = NpcNs.NpcPathLoader.LoadFromJson(filePath);
+            Debug.WriteLine($"[BootstrapNpcsFromFile] file={filePath} pts={(pts?.Count ?? 0)} repeat={repeat}");
             if (pts == null || pts.Count == 0) return;
 
-            
             int startIndex = 0;
             var cw = this.WorldObjects.FirstOrDefault(o => o.WorldObjectType == WorldObjectType.Crosswalk);
             if (cw != null)
@@ -194,24 +273,119 @@
                 startIndex = best;
             }
 
+            try
+            {
+                var fileKey = Path.GetFileNameWithoutExtension(filePath)?.ToLowerInvariant() ?? "";
+                if (!isPedestrian && fileKey.Contains("oval"))
+                {
+                    repeat = true;
+                    int bestRoadIdx = 0;
+                    double bestRoadDist = double.MaxValue;
+                    var roadCenters = this.WorldObjects
+                        .Where(o => o.WorldObjectType == WorldObjectType.Road)
+                        .Select(o => (x: o.X, y: o.Y))
+                        .ToList();
+
+                    if (roadCenters.Count > 0)
+                    {
+                        for (int i = 0; i < pts.Count; i++)
+                        {
+                            foreach (var rc in roadCenters)
+                            {
+                                var d = Math.Sqrt(Math.Pow(pts[i].X - rc.x, 2) + Math.Pow(pts[i].Y - rc.y, 2));
+                                if (d < bestRoadDist)
+                                {
+                                    bestRoadDist = d;
+                                    bestRoadIdx = i;
+                                }
+                            }
+                        }
+                        startIndex = bestRoadIdx;
+                    }
+                }
+            }
+            catch
+            {
+               
+            }
+
+           
+            bool IsNearCollideable(NpcNs.NPCPath p, int threshold = 100)
+            {
+                return this.WorldObjects
+                           .Where(o => o.Collideable)
+                           .Any(o => Math.Sqrt(Math.Pow(o.X - p.X, 2) + Math.Pow(o.Y - p.Y, 2)) < threshold);
+            }
+
+            
+            int chosen = startIndex;
+            for (int offset = 0; offset < pts.Count; offset++)
+            {
+                int idx = (startIndex + offset) % pts.Count;
+                if (!IsNearCollideable(pts[idx]))
+                {
+                    chosen = idx;
+                    break;
+                }
+            }
+            startIndex = chosen;
+            Debug.WriteLine($"[BootstrapNpcsFromFile] chosen startIndex={startIndex} point=({pts[startIndex].X},{pts[startIndex].Y})");
+
             if (isPedestrian)
             {
-                var ped = new NpcNs.Pedestrian(pts[startIndex].X, pts[startIndex].Y, "woman.png");
-                ped.ZIndex = 10; 
+                var ped = new NpcNs.Pedestrian(pts[startIndex].X, pts[startIndex].Y, "man.png");
+                ped.ZIndex = 10;
                 ped.Load(pts[startIndex].Speed, repeating: repeat, currentPoint: startIndex, points: pts);
-                npcManager.Add(ped);
-                AddObject(ped);
+                this.npcManager.Add(ped);
+                this.AddObject(ped);
+                return;
             }
-            else
+
+          
+            var preferred = "car_3_black.png";
+            var fallback = "car_2_blue.png";
+            var resolved = ResolveSpriteOrFallback(preferred, fallback);
+
+            var fileKeyCheck = Path.GetFileNameWithoutExtension(filePath)?.ToLowerInvariant() ?? "";
+            string sprite = resolved;
+            if (fileKeyCheck.Contains("oval"))
             {
-                
-                var sprite = ResolveSpriteOrFallback("car_3_black.png","car_2_blue.png");
-                var car = new NpcNs.NPCCar(pts[startIndex].X, pts[startIndex].Y, sprite);
-                car.ZIndex = 10; 
-                car.Load(pts[startIndex].Speed, repeating: repeat, currentPoint: startIndex, points: pts);
-                npcManager.Add(car);
-                AddObject(car);
+                var preferredPath = Path.Combine(AppContext.BaseDirectory, "Assets", "WorldObjects", preferred);
+                sprite = File.Exists(preferredPath) ? preferred : resolved;
             }
+
+            Debug.WriteLine($"[BootstrapNpcsFromFile] selected sprite={sprite} repeat={repeat}");
+
+            var car = new NpcNs.NPCCar(pts[startIndex].X, pts[startIndex].Y, sprite);
+            car.ZIndex = 10;
+
+            
+            int next = startIndex + 1;
+            if (next >= pts.Count) next = repeat ? 0 : startIndex;
+
+      
+            if (pts.Count > 1 && next != startIndex)
+            {
+                double dx = pts[next].X - pts[startIndex].X;
+                double dy = pts[next].Y - pts[startIndex].Y;
+                double dist = Math.Sqrt(dx * dx + dy * dy);
+                if (dist > 1e-6)
+                {
+                    double ux = dx / dist;
+                    double uy = dy / dist;
+                    const int nudgePx = 220; 
+                    car.X += (int)Math.Round(ux * nudgePx);
+                    car.Y += (int)Math.Round(uy * nudgePx);
+
+                
+                    car.Rotation = pts[next].Rotation;
+                }
+            }
+
+            car.Load(pts[startIndex].Speed, repeating: repeat, currentPoint: startIndex, points: pts);
+            this.npcManager.Add(car);
+            this.AddObject(car);
+            Debug.WriteLine($"[BootstrapNpcsFromFile] spawned car at ({car.X},{car.Y}) filename={sprite}");
         }
 
        
@@ -277,8 +451,7 @@
             foreach (RotationPoint rp in rotationPoints)
             {
                 SKBitmap im = SKBitmap.Decode(Assembly.GetExecutingAssembly().GetManifestResourceStream($"AutomatedCar.Assets.WorldObjects.{rp.Type}.png"));
-                /*var x = rp.Y / (double)im.Size.Width * 100.0;
-                var y = rp.X / (double)im.Size.Height * 100.0;*/
+                
                 var x = rp.Y / (float)im.Width * 100.0;
                 var y = rp.X / (float)im.Height * 100.0;
                 result.Add(rp.Type, x.ToString("0.00", nfi) + "%," + y.ToString("0.00", nfi) + "%");
@@ -326,7 +499,7 @@
                 default: return WorldObjectType.Other;
             }
         }
-
+        
         public SKPath AddGeometry()
         {
             List<SKPoint> points = new();
