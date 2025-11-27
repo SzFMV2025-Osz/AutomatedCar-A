@@ -8,5 +8,9 @@
 
     public interface IReadOnlyKeyboardHandlerPacket : IReadOnlyInputDevicePacket
     {
+        bool? AccToggle { get; }
+        bool? AccSpeedPlus { get; }
+        bool? AccSpeedMinus { get; }
+        bool? AccTimeGap { get; }
     }
 }
