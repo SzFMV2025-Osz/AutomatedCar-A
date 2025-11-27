@@ -60,6 +60,15 @@
                 int brakePercentage = inputPacket.BrakePercentage ?? 0;
                 int throttlePercentage = inputPacket.ThrottlePercentage ?? 0;
                 int wheelPercentage = (int)(inputPacket.WheelPercentage ?? 0);
+                var acc = this.virtualFunctionBus.AccPacket;
+
+                if (acc != null && acc.IsActive && brakePercentage == 0 && throttlePercentage == 0)
+                {
+                    if (acc.BrakePercentage.HasValue)
+                        brakePercentage = acc.BrakePercentage.Value;
+                    if (acc.ThrottlePercentage.HasValue)
+                        throttlePercentage = acc.ThrottlePercentage.Value;
+                }
 
                 var shiftUpOrDown = inputPacket.ShiftUpOrDown ?? ShiftDir.Nothing;
 
