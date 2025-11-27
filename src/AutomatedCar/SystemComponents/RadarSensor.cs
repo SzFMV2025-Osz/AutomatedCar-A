@@ -54,7 +54,7 @@ public class RadarSensor : SystemComponent
                 .Where(x => !CantSee.Contains(x.WorldObjectType))
                 .OrderBy(x => GeometryHelper.DistanceBetweenObjects(x, World.Instance.ControlledCar))
                 .ToList();
-        this.radarPacket.HightlightedObject = this.GetHighlightedObject();
+        this.radarPacket.HighlightedObject = this.GetHighlightedObject();
         this.virtualFunctionBus.RadarPacket = this.radarPacket;
     }
 

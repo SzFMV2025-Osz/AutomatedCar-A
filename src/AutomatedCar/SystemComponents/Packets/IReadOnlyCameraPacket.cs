@@ -16,5 +16,5 @@ public interface IReadOnlyCameraPacket
     /// <summary>
     /// Gets the nearest object.
     /// </summary>
-    WorldObject? HightlightedObject { get; }
+    WorldObject? HighlightedObject { get; }
 }

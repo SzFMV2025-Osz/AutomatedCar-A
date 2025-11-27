@@ -25,7 +25,7 @@ public class CameraPacket : ReactiveObject, IReadOnlyCameraPacket
     /// <summary>
     /// Gets the nearest object.
     /// </summary>
-    public WorldObject HightlightedObject
+    public WorldObject HighlightedObject
     {
         get => this.highlightedObject;
         set => this.RaiseAndSetIfChanged(ref this.highlightedObject, value);

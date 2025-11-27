@@ -1,5 +1,8 @@
 namespace AutomatedCar.Models
 {
+    using SystemComponents.Powertrain;
+    using Avalonia.Media;
+    using global::AutomatedCar.SystemComponents.Powertrain;
     using System;
     using SystemComponents;
     using Avalonia.Media;
@@ -8,6 +11,7 @@ namespace AutomatedCar.Models
     public class AutomatedCar : Car
     {
         private VirtualFunctionBus virtualFunctionBus;
+        private Powertrain powertrain;
         private CollisionDetectionService collisionDetectionService;
         private RadarSensor radarSensor;
         private CameraSensor cameraSensor;
@@ -16,6 +20,7 @@ namespace AutomatedCar.Models
             : base(x, y, filename)
         {
             this.virtualFunctionBus = new VirtualFunctionBus();
+            this.powertrain=new Powertrain(this.virtualFunctionBus,this);
             this.collisionDetectionService = new (this.virtualFunctionBus);
             this.collisionDetectionService.OnCollided += (sender, o) =>
             Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
@@ -37,7 +42,9 @@ namespace AutomatedCar.Models
         }
 
         public VirtualFunctionBus VirtualFunctionBus { get => this.virtualFunctionBus; }
-        
+
+        public Powertrain Powertrain { get => this.powertrain; }
+
         public int Revolution { get; set; }
         
         public int Velocity { get; set; }
