@@ -117,8 +117,14 @@
 
         private int GetSpeedLimitFromCamera()
         {
-            // Amíg a táblafelismerő nincs kész, ne korlátozzon semmit.
-            return MaxSpeedKmh;
+            var car = World.Instance.ControlledCar;
+            var camera = this.virtualFunctionBus.CameraPacket;
+            var roadSign = camera.RelevantObjects
+                .Where(o => o.WorldObjectType == WorldObjectType.RoadSign)
+                .OrderBy(o => GeometryHelper.DistanceBetweenObjects(o, car))
+                .FirstOrDefault();
+
+            return roadSign?.SpeedLimit ?? MaxSpeedKmh;
         }
         private int ApplyFrontCarLogic(int targetSpeed, double ownSpeedMps)
         {
