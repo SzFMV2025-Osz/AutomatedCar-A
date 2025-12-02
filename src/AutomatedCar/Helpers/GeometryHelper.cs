@@ -6,6 +6,7 @@ using Avalonia.Media;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Text.Json;
 
@@ -15,6 +16,18 @@ using System.Text.Json;
 /// </summary>
 public static class GeometryHelper
 {
+    public static List<string> DisallowedRoads =
+    [
+        "crossroad_1",
+        "crossroad_2",
+        "rotary",
+        "tjunctionleft",
+        "tjunctionright",
+    ];
+
+    private static string CombineWithRoadPrefix(string roadType) =>
+        $"road_2lane_{roadType}.png";
+
     /// <summary>
     /// Gets the distance between two points in float.
     /// </summary>
@@ -25,6 +38,33 @@ public static class GeometryHelper
         (float)Point.Distance(
             new (x: a.X, y: a.Y),
             new (x: b.X, y: b.Y));
+
+    public static List<List<Point>> GetRoadLanePoints(WorldObject road)
+    {
+        if (road.WorldObjectType != WorldObjectType.Road)
+        {
+            throw new InvalidOperationException("worldobject cannot be of non-road type!");
+        }
+
+        if (DisallowedRoads.Select(CombineWithRoadPrefix).Any(x => x == road.Filename) ||
+            road.Filename.Contains("left") || road.Filename.Contains("right"))
+        {
+            throw new ArgumentException("road cannot be complex junction!");
+        }
+
+        List<Point> laneA = [];
+        List<Point> laneB = [];
+        for (int i = 0; i < road.Geometries[0].Points.Count; i++)
+        {
+            laneA.Add((road.Geometries[0].Points[i] + road.Geometries[1].Points[i]) / 2);
+            laneB.Add((road.Geometries[2].Points[i] + road.Geometries[1].Points[i]) / 2);
+        }
+
+        return [
+            laneA,
+            laneB
+        ];
+    }
 
     public static StreamGeometry CreateGeometryFromPoints(List<Point> points)
     {
@@ -111,13 +151,7 @@ public static class GeometryHelper
 
     public static IList<Point> PositionWorldObjectPointsToAbsolute(WorldObject obj)
     {
-        var objectGeometry = obj.Geometries.FirstOrDefault() ?? new PolylineGeometry()
-        {
-            Points =
-            [
-                new Point(obj.X, obj.Y)
-            ],
-        };
+        var objectGeometry = GetObjectPolygon(obj);
 
         // Creating the rotational matrices for the points.
         var rotation = new RotateTransform
@@ -125,6 +159,22 @@ public static class GeometryHelper
             CenterX = obj.RotationPoint.X,
             CenterY = obj.RotationPoint.Y,
             Angle = obj.Rotation,
+        };
+
+        bool needsScale = obj.RenderTransformOrigin != "0,0";
+        double scaleX = 1, scaleY = 1;
+        if (needsScale && obj.RenderTransformOrigin != null)
+        {
+            scaleX = Convert.ToDouble(obj.RenderTransformOrigin.Split(',')[0]
+                .Substring(0, obj.RenderTransformOrigin.Split(',')[0].Length - 2)) / 100;
+            scaleY = Convert.ToDouble(obj.RenderTransformOrigin.Split(',')[1]
+                .Substring(0, obj.RenderTransformOrigin.Split(',')[0].Length - 2)) / 100;
+        }
+
+        var scale = new ScaleTransform()
+        {
+            ScaleX = scaleX,
+            ScaleY = scaleY,
         };
         var translation = new TranslateTransform
         {
@@ -134,8 +184,30 @@ public static class GeometryHelper
 
         // Executes transformations, then put's the newly transformed points in a list.
         return objectGeometry.Points
-            .Select(x => x.Transform(rotation.Value).Transform(translation.Value))
+            .Select(x => x.Transform(rotation.Value).Transform(scale.Value).Transform(translation.Value))
             .ToList();
+    }
+
+    private static PolylineGeometry GetObjectPolygon(WorldObject obj)
+    {
+        if (obj.WorldObjectType == WorldObjectType.Road)
+        {
+            return new PolylineGeometry()
+            {
+                Points =
+                [
+                    ..obj.Geometries.SelectMany(x => x.Points)
+                ],
+            };
+        }
+
+        return obj.Geometries.FirstOrDefault() ?? new PolylineGeometry()
+        {
+            Points =
+            [
+                new Point(obj.X, obj.Y)
+            ],
+        };
     }
 }
 
