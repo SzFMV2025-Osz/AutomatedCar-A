@@ -278,30 +278,9 @@
                 var fileKey = Path.GetFileNameWithoutExtension(filePath)?.ToLowerInvariant() ?? "";
                 if (!isPedestrian && fileKey.Contains("oval"))
                 {
+                    // For oval maps we want the NPC to start at the first point in the path file.
                     repeat = true;
-                    int bestRoadIdx = 0;
-                    double bestRoadDist = double.MaxValue;
-                    var roadCenters = this.WorldObjects
-                        .Where(o => o.WorldObjectType == WorldObjectType.Road)
-                        .Select(o => (x: o.X, y: o.Y))
-                        .ToList();
-
-                    if (roadCenters.Count > 0)
-                    {
-                        for (int i = 0; i < pts.Count; i++)
-                        {
-                            foreach (var rc in roadCenters)
-                            {
-                                var d = Math.Sqrt(Math.Pow(pts[i].X - rc.x, 2) + Math.Pow(pts[i].Y - rc.y, 2));
-                                if (d < bestRoadDist)
-                                {
-                                    bestRoadDist = d;
-                                    bestRoadIdx = i;
-                                }
-                            }
-                        }
-                        startIndex = bestRoadIdx;
-                    }
+                    startIndex = 0;
                 }
             }
             catch
