@@ -3,6 +3,7 @@ namespace AutomatedCar
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using AutomatedCar.Models;
     using AutomatedCar.ViewModels;
@@ -12,6 +13,7 @@ namespace AutomatedCar
     using Avalonia.Markup.Xaml;
     using Avalonia.Media;
     using Newtonsoft.Json.Linq;
+    using System;
 
     public class App : Application
     {
@@ -35,11 +37,44 @@ namespace AutomatedCar
         {
             var world = World.Instance;
 
-            // this.AddDummyCircleTo(world);
+            string[] args = Environment.GetCommandLineArgs();
+            string key = args.Length > 1 ? args[1] : "oval";
+            string resourceName = $"AutomatedCar.Assets.{key}.json";
 
-            world.PopulateFromJSON($"AutomatedCar.Assets.test_world.json");
+            var asm = Assembly.GetExecutingAssembly();
+            if (asm.GetManifestResourceStream(resourceName) == null)
+            {
+                resourceName = "AutomatedCar.Assets.test_world.json";
+            }
+
+            world.PopulateFromJSON(resourceName);
 
             this.AddControlledCarsTo(world);
+
+            // --- DEBUG: list world objects in Output so you can confirm the NPC is present ---
+            System.Diagnostics.Debug.WriteLine($"[CreateWorld] Loaded map: {resourceName}  WorldObjects: {world.WorldObjects.Count}");
+            foreach (var o in world.WorldObjects)
+                System.Diagnostics.Debug.WriteLine($"[CreateWorld] OBJ: {o.WorldObjectType} - {o.Filename} @({o.X},{o.Y})");
+
+            // If oval map, try to place the controlled car near the black NPC so it's visible
+            if (key.Equals("oval", StringComparison.OrdinalIgnoreCase))
+            {
+                var npcBlack = world.WorldObjects
+                    .FirstOrDefault(w => w.WorldObjectType == WorldObjectType.Car &&
+                                         (w.Filename?.IndexOf("car_3_black", StringComparison.OrdinalIgnoreCase) ?? -1) >= 0);
+                if (npcBlack != null && world.controlledCars.Count > 0)
+                {
+                    // move the first controlled car close to the NPC (offset so they don't overlap)
+                    var cc = world.controlledCars[0];
+                    cc.X = npcBlack.X + 200;
+                    cc.Y = npcBlack.Y + 200;
+                    System.Diagnostics.Debug.WriteLine($"[CreateWorld] Moved controlled car to ({cc.X},{cc.Y}) to view NPC at ({npcBlack.X},{npcBlack.Y})");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("[CreateWorld] car_3_black not found in WorldObjects");
+                }
+            }
 
             return world;
         }

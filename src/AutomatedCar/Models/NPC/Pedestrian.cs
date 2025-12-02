@@ -1,11 +1,15 @@
 ﻿namespace AutomatedCar.Models.NPC
 {
     using System.Collections.Generic;
+    
 
     public class Pedestrian : PathFollowingNpcBase
     {
-        public Pedestrian(int x, int y, string sprite = "pedestrian")
-            : base(x, y, sprite) { }
+        public Pedestrian(int x, int y, string sprite = "man.png")
+            : base(x, y, sprite)
+        {
+            this.WorldObjectType = WorldObjectType.Pedestrian;
+        }
 
         // Gyalogos fordulhat gyorsabban
         protected override double AngularSpeedDegPerSec => 300.0;
