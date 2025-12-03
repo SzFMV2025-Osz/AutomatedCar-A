@@ -12,6 +12,11 @@
 
     public class KeyboardHandlerPacket:InputDevicePacket,IReadOnlyKeyboardHandlerPacket
     {
+        public bool? AccToggle { get; set; }
+        public bool? AccSpeedPlus { get; set; }
+        public bool? AccSpeedMinus { get; set; }
+        public bool? AccTimeGap { get; set; }
+
         private bool lkaKey;
         public KeyboardHandlerPacket()
         {

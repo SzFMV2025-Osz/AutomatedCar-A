@@ -18,6 +18,10 @@
         private bool throttleSmoothReturnIsActive;
         private bool wheelIsTurningLeft;
         private bool wheelIsTurningRight;
+        private bool accToggle;
+        private bool accSpeedPlus;
+        private bool accSpeedMinus;
+        private bool accTimeGap;
 
         public KeyboardHandlerPacket KeyboardHandlerPacket { get; set; }
 
@@ -191,6 +195,12 @@
             }
 
             this.KeyboardHandlerPacket.WheelPercentage = this.wheelPercentage;
+            this.KeyboardHandlerPacket.AccToggle = this.accToggle;
+            this.KeyboardHandlerPacket.AccSpeedPlus = this.accSpeedPlus;
+            this.KeyboardHandlerPacket.AccSpeedMinus = this.accSpeedMinus;
+            this.KeyboardHandlerPacket.AccTimeGap = this.accTimeGap;
+
+            this.accToggle = this.accSpeedPlus = this.accSpeedMinus = this.accTimeGap = false;
 
             if (Keyboard.IsKeyDown(Key.L))
             {
@@ -202,5 +212,10 @@
             }
             
         }
+        public void HandleKeyDown_C() => this.accToggle = true;
+        public void HandleKeyDown_Add() => this.accSpeedPlus = true;
+        public void HandleKeyDown_Subtract() => this.accSpeedMinus = true;
+        public void HandleKeyDown_T() => this.accTimeGap = true;
+
     }
 }

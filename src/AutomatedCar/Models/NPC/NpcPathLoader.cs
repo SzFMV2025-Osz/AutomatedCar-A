@@ -25,15 +25,34 @@
             JsonElement pointsArray = default;
             bool found = false;
 
+            // prefer a standard name if present
             if (root.TryGetProperty("points", out var p) && p.ValueKind == JsonValueKind.Array)
             {
                 pointsArray = p; found = true;
             }
             else
             {
+                // prefer explicit pedestrian/car arrays when present,
+                // otherwise fall back to the first array property
+                JsonElement firstArray = default;
                 foreach (var prop in root.EnumerateObject())
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Array) { pointsArray = prop.Value; found = true; break; }
+                    if (prop.Value.ValueKind != JsonValueKind.Array) continue;
+
+                    if (prop.NameEquals("pedestrian") || prop.NameEquals("car") || prop.NameEquals("points"))
+                    {
+                        pointsArray = prop.Value;
+                        found = true;
+                        break;
+                    }
+
+                    if (firstArray.ValueKind == JsonValueKind.Undefined) firstArray = prop.Value;
+                }
+
+                if (!found && firstArray.ValueKind == JsonValueKind.Array)
+                {
+                    pointsArray = firstArray;
+                    found = true;
                 }
             }
 

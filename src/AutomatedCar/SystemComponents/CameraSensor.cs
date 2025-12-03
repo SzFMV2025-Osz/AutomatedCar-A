@@ -22,6 +22,8 @@ public class CameraSensor : SystemComponent
         WorldObjectType.ParkingSpace,
         WorldObjectType.Road,
         WorldObjectType.RoadSign,
+        WorldObjectType.Pedestrian, 
+        WorldObjectType.Tree        
     };
 
     private readonly CameraPacket cameraPacket;

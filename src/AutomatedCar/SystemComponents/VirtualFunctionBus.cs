@@ -18,6 +18,7 @@ namespace AutomatedCar.SystemComponents
 
         private IReadOnlyRadarPacket radarPacket;
 
+        public IReadOnlyAccPacket AccPacket { get; set; }
         public IReadOnlyTempomatPacket TempomatPacket { get; set; }
         public IReadOnlyRelevantObjects RelevantObjectsPacket { get; set; }
 

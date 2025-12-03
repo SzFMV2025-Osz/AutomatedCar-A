@@ -2,11 +2,10 @@ namespace AutomatedCar.Models
 {
     using SystemComponents.Powertrain;
     using Avalonia.Media;
-    using global::AutomatedCar.SystemComponents.Powertrain;
     using System;
     using SystemComponents;
-    using Avalonia.Media;
     using Helpers;
+    using global::AutomatedCar.SystemComponents.ACC;
 
     public class AutomatedCar : Car
     {
@@ -21,6 +20,8 @@ namespace AutomatedCar.Models
         {
             this.virtualFunctionBus = new VirtualFunctionBus();
             this.powertrain=new Powertrain(this.virtualFunctionBus,this);
+            new EmergencyBrake(this.virtualFunctionBus, this.powertrain.Brake);
+            new AdaptiveCruiseControl(this.virtualFunctionBus);
             this.collisionDetectionService = new (this.virtualFunctionBus);
             this.collisionDetectionService.OnCollided += (sender, o) =>
             Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
