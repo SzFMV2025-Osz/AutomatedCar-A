@@ -2,6 +2,7 @@
 {
     using AutomatedCar.SystemComponents.GearBox_test;
     using AutomatedCar.SystemComponents.Packets;
+    using Avalonia.Input;
     using System.Timers;
 
     public class KeyboardHandler : SystemComponent
@@ -200,6 +201,16 @@
             this.KeyboardHandlerPacket.AccTimeGap = this.accTimeGap;
 
             this.accToggle = this.accSpeedPlus = this.accSpeedMinus = this.accTimeGap = false;
+
+            if (Keyboard.IsKeyDown(Key.L))
+            {
+                this.KeyboardHandlerPacket.LKAKey = true;
+            }
+            else
+            {
+                this.KeyboardHandlerPacket.LKAKey = false;
+            }
+            
         }
         public void HandleKeyDown_C() => this.accToggle = true;
         public void HandleKeyDown_Add() => this.accSpeedPlus = true;
