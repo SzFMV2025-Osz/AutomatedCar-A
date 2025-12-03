@@ -155,14 +155,30 @@
                 return targetSpeed;
             }
 
-            double distance = GeometryHelper.DistanceBetweenObjects(frontCar, car);
-            double required = ownSpeedMps * this.timeGapSec;
+            int frontCarSpeed = (frontCar as NPCCar)?.Speed ?? 0;
 
-            if (distance < required * 1.1)
+            double distance = GeometryHelper.DistanceBetweenObjects(frontCar, car);
+            //double required = ownSpeedMps * this.timeGapSec;
+            double requiredMaxDistance = (ownSpeedMps * this.timeGapSec) + 2.0; // 2 meters extra gap
+
+            //if (distance < required * 1.1)
+            //{
+            //    return Math.Min(targetSpeed, (int)(ownSpeedMps * 3.6) - 5);
+            //}
+
+            //Car before is too far
+            if (distance > requiredMaxDistance) 
             {
-                return Math.Min(targetSpeed, (int)(ownSpeedMps * 3.6) - 5);
+                return targetSpeed;
             }
 
+            // Car before is slower than target speed
+            if (frontCarSpeed < targetSpeed)
+            {
+                return frontCarSpeed;
+            }
+
+            // Car before is faster than target speed
             return targetSpeed;
         }
 
