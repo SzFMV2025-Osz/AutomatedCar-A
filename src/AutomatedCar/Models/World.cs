@@ -12,11 +12,9 @@
     using System.Linq;
     using System.Reflection;
     using Visualization;
-    using Avalonia.Media;
     using SkiaSharp;
     using Svg;
-    using System.Linq;
-	using NpcNs = global::AutomatedCar.Models.NPC;
+    using NpcNs = global::AutomatedCar.Models.NPC;
 
     public class World
     {

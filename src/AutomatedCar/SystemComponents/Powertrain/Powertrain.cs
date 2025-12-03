@@ -1,8 +1,7 @@
 ﻿namespace AutomatedCar.SystemComponents.Powertrain
 {
     using AutomatedCar.Models;
-    using AutomatedCar.SystemComponents.Enginee;
-    using AutomatedCar.SystemComponents.Gearbox;
+    using AutomatedCar.SystemComponents.Engine;
     using AutomatedCar.SystemComponents.GearBox_test;
     using AutomatedCar.SystemComponents.InputHandling.Brake;
     using AutomatedCar.SystemComponents.InputHandling.Throttle;
@@ -44,6 +43,8 @@
         public override void Process()
         {
             var khp = virtualFunctionBus.KeyboardHandlerPacket;
+            var aebPacket = virtualFunctionBus.AEBInputPacket;
+
             if (khp != null)
             {
                 if (inputPacket == null)
@@ -51,17 +52,34 @@
                     inputPacket = new InputDevicePacket();
                 }
 
+                // Check for AEB priority - emergency brake takes precedence
+                int brakePercentage;
+                int throttlePercentage;
+                int wheelPercentage;
+                ShiftDir shiftUpOrDown;
+
+                if (aebPacket != null && aebPacket.BrakePercentage > 0)
+                {
+                    // AEB is active - use AEB brake, but allow wheel control
+                    brakePercentage = aebPacket.BrakePercentage ?? 0;
+                    throttlePercentage = 0; // No throttle during emergency braking
+                    wheelPercentage = khp.WheelPercentage ?? 0;
+                    shiftUpOrDown = ShiftDir.Nothing; // No gear shifting during emergency braking
+                }
+                else
+                {
+                    // Normal keyboard control
+                    brakePercentage = khp.BrakePercentage ?? 0;
+                    throttlePercentage = khp.ThrottlePercentage ?? 0;
+                    wheelPercentage = khp.WheelPercentage ?? 0;
+                    shiftUpOrDown = khp.ShiftUpOrDown ?? ShiftDir.Nothing;
+                }
+
                 // Billentyűzet értékek átemelése
-                inputPacket.BrakePercentage = khp.BrakePercentage ?? 0;
-                inputPacket.ThrottlePercentage = khp.ThrottlePercentage ?? 0;
-                inputPacket.WheelPercentage = khp.WheelPercentage ?? 0;
-                inputPacket.ShiftUpOrDown = khp.ShiftUpOrDown ?? ShiftDir.Nothing;
-
-                int brakePercentage = inputPacket.BrakePercentage ?? 0;
-                int throttlePercentage = inputPacket.ThrottlePercentage ?? 0;
-                int wheelPercentage = (int)(inputPacket.WheelPercentage ?? 0);
-
-                var shiftUpOrDown = inputPacket.ShiftUpOrDown ?? ShiftDir.Nothing;
+                inputPacket.BrakePercentage = brakePercentage;
+                inputPacket.ThrottlePercentage = throttlePercentage;
+                inputPacket.WheelPercentage = wheelPercentage;
+                inputPacket.ShiftUpOrDown = shiftUpOrDown;
 
                 Throttle.SetThrottle(throttlePercentage);
                 Brake.SetBrake(brakePercentage);
@@ -76,5 +94,4 @@
             }
         }
     }
-
 }

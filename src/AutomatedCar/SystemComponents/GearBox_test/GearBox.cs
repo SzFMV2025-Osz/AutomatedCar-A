@@ -1,6 +1,5 @@
 ﻿namespace AutomatedCar.SystemComponents.GearBox_test
 {
-    using AutomatedCar.SystemComponents.Gearbox;
     using AutomatedCar.SystemComponents.GearShifter;
     using System;
     using System.Collections.Generic;
@@ -13,7 +12,7 @@
         private double[] gearRatios = { 0.003, 0.005, 0.01, 0.015, 0.0225, 0.027 };
         private int currentInsideGearStage = 0;
         private int nextLowRevolutionChangeValue = 1000;
-        public float Speed { get; set; } // velocity = revolution * gearRation
+        public int Speed { get; set; } // velocity = revolution * gearRation
         public Gear GearStage { get; private set; }
         public int CalculateGearSpeed(int revolution, int enginespeed)
         {

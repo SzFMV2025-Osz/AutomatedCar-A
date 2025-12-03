@@ -1,4 +1,4 @@
-﻿namespace AutomatedCar.SystemComponents.Gearbox
+﻿namespace AutomatedCar.SystemComponents.GearBox_test
 {
     using AutomatedCar.SystemComponents.GearBox_test;
     using AutomatedCar.SystemComponents.GearShifter;
@@ -8,7 +8,7 @@
     /// </summary>
     public interface IGearBox
     {
-        float Speed { get; set; }
+        int Speed { get; set; }
 
         Gear GearStage { get; }
 

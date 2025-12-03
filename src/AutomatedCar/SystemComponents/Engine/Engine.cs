@@ -1,6 +1,6 @@
-﻿namespace AutomatedCar.SystemComponents.Enginee
+﻿namespace AutomatedCar.SystemComponents.Engine
 {
-    using AutomatedCar.SystemComponents.Gearbox;
+    using AutomatedCar.SystemComponents.GearBox_test;
     using AutomatedCar.SystemComponents.InputHandling.Throttle;
 
     public class Engine :IEngine

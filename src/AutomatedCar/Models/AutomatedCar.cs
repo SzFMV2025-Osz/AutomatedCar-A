@@ -15,6 +15,7 @@ namespace AutomatedCar.Models
         private CollisionDetectionService collisionDetectionService;
         private RadarSensor radarSensor;
         private CameraSensor cameraSensor;
+        private AEB aeb;
 
         public AutomatedCar(int x, int y, string filename)
             : base(x, y, filename)
@@ -39,6 +40,8 @@ namespace AutomatedCar.Models
                     angle: SensorValues.Camera.FoV,
                     facingAngle: SensorValues.Camera.RelativeAngle,
                     distance: SensorValues.Camera.Distance));
+
+            this.aeb = new AEB(this.virtualFunctionBus);
         }
 
         public VirtualFunctionBus VirtualFunctionBus { get => this.virtualFunctionBus; }

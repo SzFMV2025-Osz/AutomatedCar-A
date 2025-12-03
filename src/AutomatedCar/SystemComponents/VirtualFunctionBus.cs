@@ -17,7 +17,7 @@ namespace AutomatedCar.SystemComponents
 
         public IReadOnlyCameraPacket CameraPacket { get; set; }
         public IReadOnlyTempomatPacket TempomatPacket { get; set; }
-        public IReadOnlyRelevantObjects RelevantObjectsPacket { get; set; }
+        public IReadOnlyRelevantObjects RelevantObjectsPacket { get; set; }        
 
         public VirtualFunctionBus()
         { 
@@ -29,6 +29,8 @@ namespace AutomatedCar.SystemComponents
         public IReadOnlyKeyboardHandlerPacket KeyboardHandlerPacket { get; set; }
 
         public IReadOnlyPowertrainPacket PowertrainPacket { get; set; }
+
+        public AEBInputPacket AEBInputPacket { get; set; }
 
         public void RegisterComponent(SystemComponent component)
         {

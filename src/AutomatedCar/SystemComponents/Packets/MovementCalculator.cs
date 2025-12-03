@@ -1,7 +1,7 @@
 ﻿namespace AutomatedCar.SystemComponents
 {
     using System.Numerics;
-    using AutomatedCar.SystemComponents.Gearbox;
+    using AutomatedCar.SystemComponents.GearBox_test;
     using System;
     using AutomatedCar.Models;
     using AutomatedCar.SystemComponents.GearShifter;
@@ -24,7 +24,7 @@
         public void Process(int brakePercentage, int wheelPercentage, IGearBox gearBox)
         {
             float brakingFroce = brakePercentage * BRAKING;
-            float rollingResistance = gearBox.Speed * ROLLING_RESISTANCE;
+            float rollingResistance = (float)gearBox.Speed * ROLLING_RESISTANCE;
             float aggregatedForces = brakingFroce + rollingResistance;
             if (gearBox.GearStage == Gear.N)
             {
@@ -58,7 +58,7 @@
                 }
                 else
                 {
-                    gearBox.Speed -= forces;
+                    gearBox.Speed = (int)(gearBox.Speed - forces);
                 }
             }
             else if (gearBox.Speed < 0)
@@ -69,7 +69,7 @@
                 }
                 else
                 {
-                    gearBox.Speed += forces;
+                    gearBox.Speed = (int)(gearBox.Speed + forces);
                 }
             }
         }
