@@ -12,13 +12,14 @@
 
     public class KeyboardHandlerPacket:InputDevicePacket,IReadOnlyKeyboardHandlerPacket
     {
-
+        private bool lkaKey;
         public KeyboardHandlerPacket()
         {
             this.throttlePercentage = 0;
             this.brakePercentage = 0;
             this.wheelPercentage = 0;
             this.shiftUpOrDown = 0;
+            this.lkaKey = false;
         }
 
         public override int? BrakePercentage
@@ -61,5 +62,10 @@
             }
         }
 
+        public bool LKAKey
+        {
+            get=> this.lkaKey;
+            set => this.RaiseAndSetIfChanged(ref this.lkaKey, value);
+        }
     }
 }

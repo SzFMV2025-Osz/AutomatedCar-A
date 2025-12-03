@@ -164,11 +164,11 @@ public static class GeometryHelper
         bool needsScale = obj.RenderTransformOrigin != "0,0";
         double scaleX = 1, scaleY = 1;
         if (needsScale && obj.RenderTransformOrigin != null)
-        {
-            scaleX = Convert.ToDouble(obj.RenderTransformOrigin.Split(',')[0]
-                .Substring(0, obj.RenderTransformOrigin.Split(',')[0].Length - 2)) / 100;
-            scaleY = Convert.ToDouble(obj.RenderTransformOrigin.Split(',')[1]
-                .Substring(0, obj.RenderTransformOrigin.Split(',')[0].Length - 2)) / 100;
+        { //commentelve mert meghalltóla a program
+            //scaleX = Convert.ToDouble(obj.RenderTransformOrigin.Split(',')[0]
+            //    .Substring(0, obj.RenderTransformOrigin.Split(',')[0].Length - 2)) / 100;
+            //scaleY = Convert.ToDouble(obj.RenderTransformOrigin.Split(',')[1]
+            //    .Substring(0, obj.RenderTransformOrigin.Split(',')[0].Length - 2)) / 100;
         }
 
         var scale = new ScaleTransform()

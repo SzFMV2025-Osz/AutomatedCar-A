@@ -8,5 +8,6 @@
 
     public interface IReadOnlyKeyboardHandlerPacket : IReadOnlyInputDevicePacket
     {
+        bool LKAKey { get; }
     }
 }

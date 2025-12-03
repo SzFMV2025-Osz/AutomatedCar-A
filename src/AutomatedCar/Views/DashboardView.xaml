@@ -67,7 +67,12 @@
                                 <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Car.VirtualFunctionBus.RadarPacket.HighlightedObject.WorldObjectType}"/>
                                 <TextBlock Grid.Row="5" Grid.Column="0">Camera Highlighted object </TextBlock>
                                 <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Car.VirtualFunctionBus.CameraPacket.HighlightedObject.WorldObjectType}"/>
-                                <TextBlock Grid.Row="6" Grid.Column="0" IsVisible="{Binding Collideable, Mode=OneWay}">!!!IMPACT!!!</TextBlock>
+                                <TextBlock Grid.Row="6" Grid.Column="0"  
+                                           Text="LKA On" Foreground="LightGreen" IsVisible="{Binding Car.VirtualFunctionBus.LKAPacket.IsActive, FallbackValue=False}"/>
+
+                                <TextBlock Grid.Row="6" Grid.Column="0" 
+                                           Text="LKA OFF" IsVisible="{Binding Car.VirtualFunctionBus.LKAPacket.IsLkaDisabled, FallbackValue=False}"/>
+                                <TextBlock Grid.Row="7" Grid.Column="0" IsVisible="{Binding Collideable, Mode=OneWay}">!!!IMPACT!!!</TextBlock>
                             </Grid>
                           <StackPanel>
 

@@ -2,6 +2,7 @@
 {
     using AutomatedCar.SystemComponents.GearBox_test;
     using AutomatedCar.SystemComponents.Packets;
+    using Avalonia.Input;
     using System.Timers;
 
     public class KeyboardHandler : SystemComponent
@@ -190,6 +191,16 @@
             }
 
             this.KeyboardHandlerPacket.WheelPercentage = this.wheelPercentage;
+
+            if (Keyboard.IsKeyDown(Key.L))
+            {
+                this.KeyboardHandlerPacket.LKAKey = true;
+            }
+            else
+            {
+                this.KeyboardHandlerPacket.LKAKey = false;
+            }
+            
         }
     }
 }

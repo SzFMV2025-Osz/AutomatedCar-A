@@ -24,6 +24,7 @@ namespace AutomatedCar.Models
             this.collisionDetectionService = new (this.virtualFunctionBus);
             this.collisionDetectionService.OnCollided += (sender, o) =>
             Console.WriteLine($"{this.virtualFunctionBus.CurrentTick}: collided with {o.WorldObjectType}");
+            new LKA(this.virtualFunctionBus);
             this.ZIndex = 10;
             
             this.radarSensor = new RadarSensor(

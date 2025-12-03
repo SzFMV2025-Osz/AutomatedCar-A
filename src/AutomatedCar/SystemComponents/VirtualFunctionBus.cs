@@ -54,7 +54,17 @@ namespace AutomatedCar.SystemComponents
             }
         }
 
+        private IReadOnlyLKAPacket  lkaPacket;
 
+        public IReadOnlyLKAPacket LKAPacket
+        {
+            get => this.lkaPacket;  
+            set
+            {
+                this.lkaPacket = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LKAPacket)));
+            }
+        }
 
 
         public void RegisterComponent(SystemComponent component)
