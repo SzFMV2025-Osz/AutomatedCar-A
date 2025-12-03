@@ -4,18 +4,20 @@ namespace AutomatedCar.SystemComponents
     using AutomatedCar.SystemComponents.Packets;
     using AutomatedCar.SystemComponents.Packets.Input_Packets;
     using System.Collections.Generic;
+    using System.ComponentModel;
 
-    public class VirtualFunctionBus : GameBase
+    public class VirtualFunctionBus : GameBase, INotifyPropertyChanged
     {
         private List<SystemComponent> components = new List<SystemComponent>();
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public IReadOnlyDummyPacket DummyPacket { get;}
 
         internal DummyPacket WritableDummyPacket { get; }
 
-        public IReadOnlyRadarPacket RadarPacket { get; set; }
+        private IReadOnlyRadarPacket radarPacket;
 
-        public IReadOnlyCameraPacket CameraPacket { get; set; }
         public IReadOnlyTempomatPacket TempomatPacket { get; set; }
         public IReadOnlyRelevantObjects RelevantObjectsPacket { get; set; }
 
@@ -29,6 +31,31 @@ namespace AutomatedCar.SystemComponents
         public IReadOnlyKeyboardHandlerPacket KeyboardHandlerPacket { get; set; }
 
         public IReadOnlyPowertrainPacket PowertrainPacket { get; set; }
+
+        public IReadOnlyRadarPacket RadarPacket
+        {
+            get => this.radarPacket;
+            set
+            {
+                this.radarPacket = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RadarPacket)));
+            }
+        }
+
+        private IReadOnlyCameraPacket cameraPacket;
+
+        public IReadOnlyCameraPacket CameraPacket
+        {
+            get => this.cameraPacket;
+            set
+            {
+                this.cameraPacket = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CameraPacket)));
+            }
+        }
+
+
+
 
         public void RegisterComponent(SystemComponent component)
         {
