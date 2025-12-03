@@ -2,10 +2,8 @@ namespace AutomatedCar.Models
 {
     using SystemComponents.Powertrain;
     using Avalonia.Media;
-    using global::AutomatedCar.SystemComponents.Powertrain;
     using System;
     using SystemComponents;
-    using Avalonia.Media;
     using Helpers;
     using global::AutomatedCar.SystemComponents.ACC;
 
