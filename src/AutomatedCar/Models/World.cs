@@ -12,10 +12,8 @@
     using System.Linq;
     using System.Reflection;
     using Visualization;
-    using Avalonia.Media;
     using SkiaSharp;
     using Svg;
-    using System.Linq;
     using System.Diagnostics;
 	using NpcNs = global::AutomatedCar.Models.NPC;
 
@@ -510,8 +508,6 @@
             {
                 return null;
             }
-
-            return null;
         }
     }
 }
