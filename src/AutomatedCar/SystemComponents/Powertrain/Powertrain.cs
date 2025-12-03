@@ -55,7 +55,7 @@
                 // Check for AEB priority - emergency brake takes precedence
                 int brakePercentage;
                 int throttlePercentage;
-                int wheelPercentage;
+                double wheelPercentage;
                 ShiftDir shiftUpOrDown;
 
                 if (aebPacket != null && aebPacket.BrakePercentage > 0)
@@ -90,7 +90,7 @@
                 PowertrainPacket.RPM = Engine.Revolution;
                 PowertrainPacket.Speed = (int)GearBox.Speed;
 
-                MovementCalculator.Process(brakePercentage, wheelPercentage, GearBox);
+                MovementCalculator.Process(brakePercentage, (int)wheelPercentage, GearBox);
             }
         }
     }
