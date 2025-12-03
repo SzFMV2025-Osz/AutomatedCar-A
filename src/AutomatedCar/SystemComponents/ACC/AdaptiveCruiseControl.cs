@@ -167,7 +167,7 @@
             //}
 
             //Car before is too far
-            if (distance > requiredMaxDistance) 
+            if (distance > requiredMaxDistance)
             {
                 return targetSpeed;
             }
