@@ -13,7 +13,8 @@ public class LKAPacket : ReactiveObject, IReadOnlyLKAPacket
             this.RaiseAndSetIfChanged(ref this.isActive, value);
             this.RaisePropertyChanged(nameof(IsLkaDisabled));
         }
-    } 
-    
-    public bool IsLkaDisabled => !this.IsActive;
+    }
+
+    public bool IsReady { get; set; } = false;
+    public bool IsLkaDisabled => !this.IsActive && IsReady;
 }

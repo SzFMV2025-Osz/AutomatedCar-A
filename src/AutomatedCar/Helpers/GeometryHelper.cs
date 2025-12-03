@@ -39,8 +39,13 @@ public static class GeometryHelper
             new (x: a.X, y: a.Y),
             new (x: b.X, y: b.Y));
 
-    public static List<List<Point>> GetRoadLanePoints(WorldObject road)
+    public static List<List<Point>> GetRoadLanePoints(WorldObject? road)
     {
+        if (road is null)
+        {
+            throw new ArgumentNullException(nameof(road));
+        }
+        
         if (road.WorldObjectType != WorldObjectType.Road)
         {
             throw new InvalidOperationException("worldobject cannot be of non-road type!");
@@ -161,21 +166,7 @@ public static class GeometryHelper
             Angle = obj.Rotation,
         };
 
-        bool needsScale = obj.RenderTransformOrigin != "0,0";
-        double scaleX = 1, scaleY = 1;
-        if (needsScale && obj.RenderTransformOrigin != null)
-        { //commentelve mert meghalltóla a program
-            //scaleX = Convert.ToDouble(obj.RenderTransformOrigin.Split(',')[0]
-            //    .Substring(0, obj.RenderTransformOrigin.Split(',')[0].Length - 2)) / 100;
-            //scaleY = Convert.ToDouble(obj.RenderTransformOrigin.Split(',')[1]
-            //    .Substring(0, obj.RenderTransformOrigin.Split(',')[0].Length - 2)) / 100;
-        }
-
-        var scale = new ScaleTransform()
-        {
-            ScaleX = scaleX,
-            ScaleY = scaleY,
-        };
+      
         var translation = new TranslateTransform
         {
             X = obj.X,
@@ -184,7 +175,7 @@ public static class GeometryHelper
 
         // Executes transformations, then put's the newly transformed points in a list.
         return objectGeometry.Points
-            .Select(x => x.Transform(rotation.Value).Transform(scale.Value).Transform(translation.Value))
+            .Select(x => x.Transform(rotation.Value).Transform(translation.Value))
             .ToList();
     }
 
