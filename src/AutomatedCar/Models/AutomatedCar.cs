@@ -20,6 +20,7 @@ namespace AutomatedCar.Models
         {
             this.virtualFunctionBus = new VirtualFunctionBus();
             this.powertrain=new Powertrain(this.virtualFunctionBus,this);
+            new EmergencyBrake(this.virtualFunctionBus, this.powertrain.Brake);
             new AdaptiveCruiseControl(this.virtualFunctionBus);
             this.collisionDetectionService = new (this.virtualFunctionBus);
             this.collisionDetectionService.OnCollided += (sender, o) =>
